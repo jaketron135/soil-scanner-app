@@ -262,9 +262,9 @@ HTML_TEMPLATE = """
                             <img src="https://images.unsplash.com/photo-1557844357-7662c3e8b4e0?w=200" alt="Green Beans">
                             <span>Beans</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
-                            <img src="https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?w=200" alt="Sweet Corn">
-                            <span>Corn</span>
+                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
+                            <img src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=200" alt="Sweet Corn">
+                            <span>Sweet Corn</span>
                         </div>
                         <div class="veg-card" onclick="openModal('Eggplants', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400', 'Strong root systems thrive in dense mineral-rich clay soils with proper sun exposure.')">
                             <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200" alt="Eggplants">
