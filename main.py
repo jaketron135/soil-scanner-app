@@ -14,7 +14,6 @@ HTML_TEMPLATE = """
         :root {
             --primary-green: #15803d;
             --primary-hover: #166534;
-            --light-bg: #f0fdf4;
             --border-color: #bbf7d0;
             --text-dark: #0f172a;
             --text-muted: #475569;
@@ -35,25 +34,13 @@ HTML_TEMPLATE = """
             border-radius: 20px; 
             box-shadow: 0 12px 30px -8px rgba(21, 128, 61, 0.15), 0 4px 6px -4px rgba(0, 0, 0, 0.05); 
             width: 100%; 
-            max-width: 480px; 
+            max-width: 500px; 
             text-align: center; 
             border: 1px solid var(--border-color); 
         }
-        .logo-icon {
-            font-size: 38px;
-            margin-bottom: 4px;
-        }
-        h2 { 
-            margin: 0 0 4px 0; 
-            color: #14532d; 
-            font-size: 22px; 
-            font-weight: 700;
-        }
-        p { 
-            color: var(--text-muted); 
-            font-size: 13px; 
-            margin-bottom: 20px; 
-        }
+        .logo-icon { font-size: 38px; margin-bottom: 4px; }
+        h2 { margin: 0 0 4px 0; color: #14532d; font-size: 22px; font-weight: 700; }
+        p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
         .file-upload-label { 
             display: block; 
             background: linear-gradient(135deg, #16a34a, #15803d); 
@@ -66,10 +53,7 @@ HTML_TEMPLATE = """
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
             transition: all 0.2s ease; 
         }
-        .file-upload-label:hover { 
-            background: linear-gradient(135deg, #15803d, #14532d); 
-            transform: translateY(-1px);
-        }
+        .file-upload-label:hover { background: linear-gradient(135deg, #15803d, #14532d); transform: translateY(-1px); }
         input[type="file"] { display: none; }
         .preview-box { display: none; margin: 16px 0; }
         .preview-box img, .result-img { 
@@ -94,10 +78,7 @@ HTML_TEMPLATE = """
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
             transition: all 0.2s ease; 
         }
-        .scan-btn:hover { 
-            background: linear-gradient(135deg, #15803d, #14532d); 
-            transform: translateY(-1px);
-        }
+        .scan-btn:hover { background: linear-gradient(135deg, #15803d, #14532d); transform: translateY(-1px); }
         .results-box { 
             background: #fafaf9; 
             border: 1px solid #e7e5e4; 
@@ -114,41 +95,10 @@ HTML_TEMPLATE = """
             padding-bottom: 6px; 
             margin-bottom: 12px; 
         }
-        .metric { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin: 8px 0; 
-            font-size: 13.5px; 
-            color: var(--text-muted); 
-        }
-        .badge-clay { 
-            background: #dcfce7; 
-            color: #166534; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            font-weight: 600; 
-            font-size: 12px; 
-            border: 1px solid #bbf7d0; 
-        }
-        .badge-dry { 
-            background: #e0f2fe; 
-            color: #0369a1; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            font-weight: 600; 
-            font-size: 12px; 
-            border: 1px solid #bae6fd; 
-        }
-        .badge-fert { 
-            background: #fef3c7; 
-            color: #b45309; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            font-weight: 600; 
-            font-size: 12px; 
-            border: 1px solid #fde68a; 
-        }
+        .metric { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-size: 13.5px; color: var(--text-muted); }
+        .badge-clay { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; border: 1px solid #bbf7d0; }
+        .badge-dry { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; border: 1px solid #bae6fd; }
+        .badge-fert { background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; border: 1px solid #fde68a; }
         .fert-box { 
             background: #fefce8; 
             border-left: 4px solid #ca8a04; 
@@ -169,20 +119,87 @@ HTML_TEMPLATE = """
             border-radius: 0 8px 8px 0; 
             line-height: 1.5; 
         }
-        .veg-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 6px;
+        /* Real Vegetable Grid Styling */
+        .veg-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
         }
-        .veg-tag {
-            background: #dcfce7;
-            color: #166534;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11.5px;
-            font-weight: 600;
+        .veg-card {
+            background: #ffffff;
             border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .veg-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+        }
+        .veg-card img {
+            width: 100%;
+            height: 55px;
+            object-fit: cover;
+        }
+        .veg-card span {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #166534;
+            padding: 3px 2px;
+        }
+        /* Modal Popup Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+        .modal-content img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .modal-content h4 {
+            margin: 0 0 6px 0;
+            color: #14532d;
+            font-size: 18px;
+        }
+        .modal-content p {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 16px;
+        }
+        .close-btn {
+            background: #15803d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
         }
         .back-btn { 
             display: inline-block; 
@@ -196,10 +213,7 @@ HTML_TEMPLATE = """
             box-shadow: 0 4px 10px rgba(21, 128, 61, 0.2);
             transition: all 0.2s ease; 
         }
-        .back-btn:hover { 
-            background: #14532d; 
-            transform: translateY(-1px);
-        }
+        .back-btn:hover { background: #14532d; transform: translateY(-1px); }
     </style>
 </head>
 <body>
@@ -228,16 +242,40 @@ HTML_TEMPLATE = """
 
                 <div class="veg-box">
                     <strong>🌱 Recommended Vegetable Varieties:</strong><br>
-                    Suitable for high-nutrient retention heavy soils with proper amendment:
-                    <div class="veg-tags">
-                        <span class="veg-tag">🍅 Tomatoes</span>
-                        <span class="veg-tag">🫑 Bell Peppers</span>
-                        <span class="veg-tag">🥦 Broccoli</span>
-                        <span class="veg-tag">🥬 Cabbage</span>
-                        <span class="veg-tag">🫘 Green Beans</span>
-                        <span class="veg-tag">🌽 Sweet Corn</span>
-                        <span class="veg-tag">🍆 Eggplants</span>
-                        <span class="veg-tag">🥬 Spinach</span>
+                    Click any crop below to view real preview details:
+                    <div class="veg-grid">
+                        <div class="veg-card" onclick="openModal('Tomatoes', 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400', 'Thrives well in amended clay soils with consistent watering and rich calcium levels.')">
+                            <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200" alt="Tomatoes">
+                            <span>Tomatoes</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Bell Peppers', 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400', 'Requires well-drained pockets and adequate phosphorus during early root growth.')">
+                            <img src="https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=200" alt="Bell Peppers">
+                            <span>Peppers</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Broccoli', 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400', 'Performs exceptionally in moisture-retaining heavy clay soils during cooler temperatures.')">
+                            <img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200" alt="Broccoli">
+                            <span>Broccoli</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Cabbage', 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400', 'Appreciates high nutrient retention and compact structure of clay loam soils.')">
+                            <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=200" alt="Cabbage">
+                            <span>Cabbage</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1567306226416-28f0efdc884f?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
+                            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc884f?w=200" alt="Green Beans">
+                            <span>Beans</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd97e68d20e7?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
+                            <img src="https://images.unsplash.com/photo-1551754655-cd97e68d20e7?w=200" alt="Sweet Corn">
+                            <span>Corn</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Eggplants', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400', 'Strong root systems thrive in dense mineral-rich clay soils with proper sun exposure.')">
+                            <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200" alt="Eggplants">
+                            <span>Eggplants</span>
+                        </div>
+                        <div class="veg-card" onclick="openModal('Spinach', 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400', 'Grows rapidly in nitrogen-amended plots with sufficient moisture and shade.')">
+                            <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200" alt="Spinach">
+                            <span>Spinach</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -256,6 +294,16 @@ HTML_TEMPLATE = """
         {% endif %}
     </div>
 
+    <!-- Popup Modal -->
+    <div id="vegModal" class="modal">
+        <div class="modal-content">
+            <img id="modalImg" src="" alt="Vegetable">
+            <h4 id="modalTitle">Crop Name</h4>
+            <p id="modalDesc">Description text goes here...</p>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
     <script>
         function previewImage(event) {
             const reader = new FileReader();
@@ -266,6 +314,24 @@ HTML_TEMPLATE = """
             };
             if(event.target.files[0]) {
                 reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        function openModal(title, imgSrc, desc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('vegModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('vegModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('vegModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
             }
         }
     </script>
