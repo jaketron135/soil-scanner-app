@@ -21,8 +21,7 @@ def run_diagnostic_model(image_path):
         "recommended_crops": "Sweet Potatoes, Cassava, Peanuts, Watermelon, Legumes"
     }
 
-# Absolute barebones HTML — strictly requires manual submit button click
-CLEAN_HTML = """
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +33,7 @@ CLEAN_HTML = """
         .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 480px; width: 100%; text-align: center; }
         .btn { background-color: #2e7d32; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 15px; display: block; box-sizing: border-box; text-decoration: none; }
         .btn:hover { background-color: #1b5e20; }
-        .img-preview { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0; }
+        .img-preview { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0; display: none; }
         .badge { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
         .row { display: flex; justify-content: space-between; margin: 10px 0; text-align: left; }
     </style>
@@ -48,7 +47,7 @@ CLEAN_HTML = """
     {% if results %}
         <div style="text-align: left;">
             <h3>Diagnostic Report</h3>
-            <img src="/{{ image_url }}" alt="Soil Sample Preview" class="img-preview">
+            <img src="/{{ image_url }}" alt="Soil Sample Preview" class="img-preview" style="display: block;">
 
             <div class="row">
                 <span>Soil Classification:</span>
@@ -70,12 +69,32 @@ CLEAN_HTML = """
             <a href="/" class="btn" style="text-align: center;">🔬 Run Another Scan</a>
         </div>
     {% else %}
-        <!-- NO JAVASCRIPT / NO AUTO-SUBMIT LISTENERS -->
+        <!-- MANUAL UPLOAD & PREVIEW FORM -->
         <form action="/predict" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*" required>
-            <br><br>
+            <input type="file" name="file" id="soil-image-input" accept="image/*" required onchange="previewSelectedImage(event)">
+            
+            <!-- Live Preview Area -->
+            <img id="image-preview-element" class="img-preview" alt="Soil Image Preview">
+
+            <!-- Scan Button (Execution happens ONLY when clicked) -->
             <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
         </form>
+
+        <script>
+            // Live Preview Script without form submission
+            function previewSelectedImage(event) {
+                const input = event.target;
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.getElementById('image-preview-element');
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
     {% endif %}
 </div>
 
@@ -85,15 +104,13 @@ CLEAN_HTML = """
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template_string(CLEAN_HTML, results=None)
+    return render_template_string(HTML_TEMPLATE, results=None)
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
-    # If route accessed directly via GET, bounce back to index
     if request.method == 'GET':
         return redirect(url_for('index'))
 
-    # Only run logic if a file payload actually exists in the POST request
     if 'file' in request.files and request.files['file'].filename != '':
         file = request.files['file']
         if allowed_file(file.filename):
@@ -103,7 +120,7 @@ def predict():
             file.save(filepath)
 
             results = run_diagnostic_model(filepath)
-            return render_template_string(CLEAN_HTML, results=results, image_url=filepath)
+            return render_template_string(HTML_TEMPLATE, results=results, image_url=filepath)
 
     return redirect(url_for('index'))
 
