@@ -1,3 +1,17 @@
+import sqlite3
+import csv
+import io
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
+
+# 1. Initialize FastAPI FIRST
+app = FastAPI()
+
+# 2. Mount static directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# 3. Define routes AFTER app is created
 @app.get("/export-csv")
 def export_csv():
     conn = sqlite3.connect("soil_data.db")
