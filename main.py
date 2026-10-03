@@ -2,6 +2,8 @@ import sqlite3
 import csv
 import io
 import datetime
+import cv2
+import numpy as np
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,7 +13,7 @@ app = FastAPI()
 # Mount static files directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Initialize database table if it doesn't exist
+# Database setup
 def init_db():
     conn = sqlite3.connect("soil_data.db")
     cursor = conn.cursor()
@@ -29,24 +31,59 @@ def init_db():
 
 init_db()
 
-# 1. Root route to serve main page
+def analyze_soil_opencv(image_bytes):
+    """Processes uploaded soil image using OpenCV for texture and moisture heuristic analysis."""
+    nparr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    if img is None:
+        return "Unknown", "Unclear Texture", "Undetermined", "Unable to process image matrix."
+
+    # Convert to HSV and Grayscale
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Calculate average brightness / darkness for moisture heuristic
+    mean_brightness = np.mean(gray)
+    if mean_brightness < 80:
+        moisture = "Moist / High Retention"
+    elif mean_brightness < 140:
+        moisture = "Moderate Moisture"
+    else:
+        moisture = "Dry Surface"
+
+    # Edge density for texture / topography
+    edges = cv2.Canny(gray, 50, 150)
+    edge_density = np.sum(edges > 0) / (img.shape[0] * img.shape[1])
+    
+    if edge_density > 0.08:
+        topography = "Coarse / Rocky / Rough Surface"
+        classification = "Sandy / Gravelly Loam"
+        nutrients = "High aeration, moderate drainage. Benefits from organic compost addition."
+    elif edge_density > 0.03:
+        topography = "Moderate Grain / Standard Slope"
+        classification = "Loam Soil"
+        nutrients = "Balanced mineral profile (N-P-K friendly). Ideal for a wide range of crops."
+    else:
+        topography = "Smooth / Fine / Dense Surface"
+        classification = "Clay / Heavy Clay"
+        nutrients = "Rich in minerals (K, Ca) but prone to compaction and poor drainage."
+
+    return classification, topography, moisture, nutrients
+
 @app.get("/")
 def read_root():
     return FileResponse("static/index.html")
 
-# 2. Predict endpoint for image upload analysis
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    # Read image contents
     contents = await file.read()
     
-    # Simple mockup analysis (replace with your OpenCV/ML logic as needed)
+    # Process image with OpenCV
+    classification, topography, moisture, nutrients = analyze_soil_opencv(contents)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    classification = "Loam Soil"
-    topography = "Flat / Gentle Slope"
-    moisture = "22.5% (Optimal)"
 
-    # Save result into SQLite database
+    # Log to SQLite
     conn = sqlite3.connect("soil_data.db")
     cursor = conn.cursor()
     cursor.execute(
@@ -56,36 +93,66 @@ async def predict(file: UploadFile = File(...)):
     conn.commit()
     conn.close()
 
-    # Return structured result to browser
+    # Render complete Diagnostic Report UI matching your original dashboard
     return HTMLResponse(content=f"""
         <!DOCTYPE html>
-        <html>
+        <html lang="en">
         <head>
+            <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Scan Results</title>
+            <title>Soil Diagnostic Report</title>
             <style>
-                body {{ font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; }}
-                .card {{ max-width: 500px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }}
-                h2 {{ color: #27ae60; }}
-                .btn {{ display: inline-block; background: #3498db; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-top: 15px; }}
+                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }}
+                .container {{ max-width: 550px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }}
+                .header {{ text-align: center; color: #2e7d32; margin-bottom: 20px; }}
+                .report-card {{ background: #fafafa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px; margin-top: 15px; }}
+                .metric {{ margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px; }}
+                .label {{ font-weight: 600; color: #555; }}
+                .badge {{ background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }}
+                .badge-moisture {{ background: #e3f2fd; color: #1565c0; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }}
+                .info-box {{ background: #f9fbe7; border-left: 4px solid #c0ca33; padding: 12px; border-radius: 4px; margin-top: 15px; font-size: 0.95rem; color: #333; }}
+                .btn {{ display: block; text-align: center; background-color: #2e7d32; color: white; padding: 12px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
+                .btn:hover {{ background-color: #1b5e20; }}
             </style>
         </head>
         <body>
-            <div class="card">
-                <h2>✅ Soil Analysis Complete</h2>
-                <p><strong>File Name:</strong> {file.filename}</p>
-                <p><strong>Timestamp:</strong> {timestamp}</p>
-                <p><strong>Classification:</strong> {classification}</p>
-                <p><strong>Topography:</strong> {topography}</p>
-                <p><strong>Moisture Level:</strong> {moisture}</p>
-                <hr>
-                <a href="/" class="btn">⬅️ Perform Another Scan</a>
+            <div class="container">
+                <div class="header">
+                    <h2>🌱 Soil Diagnostic Scanner</h2>
+                    <p style="color: #666; font-size: 0.9rem;">Computer Vision Soil Analysis & Crop Advisor</p>
+                </div>
+
+                <div class="report-card">
+                    <h3 style="margin-top:0; color: #2c3e50;">Diagnostic Report</h3>
+                    <p style="font-size: 0.85rem; color: #888;">Scanned on: {timestamp} | File: {file.filename}</p>
+                    
+                    <div class="metric">
+                        <span class="label">Soil Classification:</span>
+                        <span class="badge">{classification}</span>
+                    </div>
+
+                    <div class="metric">
+                        <span class="label">Topography Texture:</span>
+                        <span style="font-weight: 500; text-align: right; max-width: 60%;">{topography}</span>
+                    </div>
+
+                    <div class="metric">
+                        <span class="label">Moisture Level:</span>
+                        <span class="badge-moisture">{moisture}</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🌱 Soil Health & Nutrients:</strong><br>
+                        {nutrients}
+                    </div>
+                </div>
+
+                <a href="/" class="btn">🔬 Run Diagnostic Scan</a>
             </div>
         </body>
         </html>
     """)
 
-# 3. Export CSV endpoint
 @app.get("/export-csv")
 def export_csv():
     conn = sqlite3.connect("soil_data.db")
