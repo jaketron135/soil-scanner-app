@@ -11,33 +11,187 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soil Diagnostic Scanner</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: #334155; }
-        .card { background: #ffffff; padding: 32px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); width: 100%; max-width: 500px; text-align: center; border: 1px solid #f1f5f9; }
-        h2 { margin-bottom: 6px; color: #0f172a; font-size: 22px; }
-        p { color: #64748b; font-size: 13px; margin-bottom: 24px; }
-        .file-upload-label { display: block; background: #22c55e; color: white; padding: 14px; border-radius: 10px; font-weight: 600; cursor: pointer; margin-bottom: 16px; transition: background 0.2s ease; }
-        .file-upload-label:hover { background: #16a34a; }
+        :root {
+            --primary-green: #15803d;
+            --primary-hover: #166534;
+            --light-bg: #f0fdf4;
+            --border-color: #bbf7d0;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            color: var(--text-dark); 
+        }
+        .card { 
+            background: #ffffff; 
+            padding: 36px 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 12px 30px -8px rgba(21, 128, 61, 0.15), 0 4px 6px -4px rgba(0, 0, 0, 0.05); 
+            width: 100%; 
+            max-width: 480px; 
+            text-align: center; 
+            border: 1px solid var(--border-color); 
+        }
+        .logo-icon {
+            font-size: 38px;
+            margin-bottom: 4px;
+        }
+        h2 { 
+            margin: 0 0 4px 0; 
+            color: #14532d; 
+            font-size: 24px; 
+            font-weight: 700;
+        }
+        p { 
+            color: var(--text-muted); 
+            font-size: 13.5px; 
+            margin-bottom: 24px; 
+        }
+        .file-upload-label { 
+            display: block; 
+            background: linear-gradient(135deg, #16a34a, #15803d); 
+            color: white; 
+            padding: 16px; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-bottom: 16px; 
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+            transition: all 0.2s ease; 
+        }
+        .file-upload-label:hover { 
+            background: linear-gradient(135deg, #15803d, #14532d); 
+            transform: translateY(-1px);
+        }
         input[type="file"] { display: none; }
         .preview-box { display: none; margin: 16px 0; }
-        .preview-box img, .result-img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
-        .scan-btn { width: 100%; background: #22c55e; color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: background 0.2s ease; }
-        .scan-btn:hover { background: #16a34a; }
-        .results-box { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; text-align: left; margin-bottom: 20px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.01); }
-        .results-box h3 { color: #0f172a; font-size: 16px; margin-top: 0; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 14px; }
-        .metric { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: 13.5px; color: #475569; }
-        .badge-clay { background: #f0fdf4; color: #16a34a; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid #dcfce7; }
-        .badge-dry { background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid #e0f2fe; }
-        .badge-fert { background: #fefce8; color: #ca8a04; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid #fef08a; }
-        .health-box { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px; margin-top: 14px; font-size: 13px; color: #166534; border-radius: 0 8px 8px 0; line-height: 1.5; }
-        .fert-box { background: #fefde8; border-left: 4px solid #eab308; padding: 12px; margin-top: 10px; font-size: 13px; color: #854d0e; border-radius: 0 8px 8px 0; line-height: 1.5; }
-        .back-btn { display: inline-block; background: #0ea5e9; color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 13.5px; transition: background 0.2s ease; }
-        .back-btn:hover { background: #0284c7; }
+        .preview-box img, .result-img { 
+            width: 100%; 
+            max-height: 240px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 2px solid var(--border-color); 
+            margin-bottom: 16px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); 
+        }
+        .scan-btn { 
+            width: 100%; 
+            background: linear-gradient(135deg, #16a34a, #15803d); 
+            color: white; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 16px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+            transition: all 0.2s ease; 
+        }
+        .scan-btn:hover { 
+            background: linear-gradient(135deg, #15803d, #14532d); 
+            transform: translateY(-1px);
+        }
+        .results-box { 
+            background: #fafaf9; 
+            border: 1px solid #e7e5e4; 
+            padding: 22px; 
+            border-radius: 14px; 
+            text-align: left; 
+            margin-bottom: 20px; 
+        }
+        .results-box h3 { 
+            color: #14532d; 
+            font-size: 17px; 
+            margin-top: 0; 
+            border-bottom: 2px solid var(--border-color); 
+            padding-bottom: 8px; 
+            margin-bottom: 16px; 
+        }
+        .metric { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin: 12px 0; 
+            font-size: 14px; 
+            color: var(--text-muted); 
+        }
+        .badge-clay { 
+            background: #dcfce7; 
+            color: #166534; 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 12.5px; 
+            border: 1px solid #bbf7d0; 
+        }
+        .badge-dry { 
+            background: #e0f2fe; 
+            color: #0369a1; 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 12.5px; 
+            border: 1px solid #bae6fd; 
+        }
+        .badge-fert { 
+            background: #fef3c7; 
+            color: #b45309; 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 12.5px; 
+            border: 1px solid #fde68a; 
+        }
+        .fert-box { 
+            background: #fefce8; 
+            border-left: 4px solid #ca8a04; 
+            padding: 14px; 
+            margin-top: 16px; 
+            font-size: 13.5px; 
+            color: #713f12; 
+            border-radius: 0 10px 10px 0; 
+            line-height: 1.5; 
+        }
+        .health-box { 
+            background: #f0fdf4; 
+            border-left: 4px solid #16a34a; 
+            padding: 14px; 
+            margin-top: 12px; 
+            font-size: 13.5px; 
+            color: #14532d; 
+            border-radius: 0 10px 10px 0; 
+            line-height: 1.5; 
+        }
+        .back-btn { 
+            display: inline-block; 
+            background: #15803d; 
+            color: white; 
+            text-decoration: none; 
+            padding: 12px 24px; 
+            border-radius: 10px; 
+            font-weight: 600; 
+            font-size: 14px; 
+            box-shadow: 0 4px 10px rgba(21, 128, 61, 0.2);
+            transition: all 0.2s ease; 
+        }
+        .back-btn:hover { 
+            background: #14532d; 
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>🌱 Soil Diagnostic Scanner</h2>
-        <p>Computer Vision Soil Analysis & Crop Advisor</p>
+        <div class="logo-icon">🌿</div>
+        <h2>Soil Diagnostic Scanner</h2>
+        <p>Professional Computer Vision Soil Analysis & Crop Advisor</p>
         
         {% if result %}
             <div class="results-box">
@@ -65,7 +219,7 @@ HTML_TEMPLATE = """
             <a href="/" class="back-btn">← Scan Another Image</a>
         {% else %}
             <form action="/predict" method="POST" enctype="multipart/form-data">
-                <label for="soil_image" class="file-upload-label">📷 Capture / Select Soil</label>
+                <label for="soil_image" class="file-upload-label">📸 Capture / Select Soil Image</label>
                 <input type="file" id="soil_image" name="file" accept="image/*" capture="environment" onchange="previewImage(event)">
                 
                 <div id="previewContainer" class="preview-box">
