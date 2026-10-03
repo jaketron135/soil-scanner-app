@@ -4,6 +4,7 @@ import io
 import datetime
 import cv2
 import numpy as np
+import base64
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,7 +24,8 @@ def init_db():
             timestamp TEXT,
             classification TEXT,
             topography TEXT,
-            moisture TEXT
+            moisture TEXT,
+            image_base64 TEXT
         )
     """)
     conn.commit()
@@ -37,7 +39,11 @@ def analyze_soil_opencv(image_bytes):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     
     if img is None:
-        return "Unknown", "Unclear Texture", "Undetermined", "Unable to process image matrix."
+        return "Unknown", "Unclear Texture", "Undetermined", "Unable to process image matrix.", ""
+
+    # Generate a base64 version of the image for preview
+    _, buffer = cv2.imencode('.jpg', img)
+    image_base64 = base64.b64encode(buffer).decode('utf-8')
 
     # Convert to HSV and Grayscale
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -69,7 +75,7 @@ def analyze_soil_opencv(image_bytes):
         classification = "Clay / Heavy Clay"
         nutrients = "Rich in minerals (K, Ca) but prone to compaction and poor drainage."
 
-    return classification, topography, moisture, nutrients
+    return classification, topography, moisture, nutrients, image_base64
 
 @app.get("/")
 def read_root():
@@ -80,20 +86,20 @@ async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     
     # Process image with OpenCV
-    classification, topography, moisture, nutrients = analyze_soil_opencv(contents)
+    classification, topography, moisture, nutrients, image_base64 = analyze_soil_opencv(contents)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Log to SQLite
     conn = sqlite3.connect("soil_data.db")
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO scans (timestamp, classification, topography, moisture) VALUES (?, ?, ?, ?)",
-        (timestamp, classification, topography, moisture)
+        "INSERT INTO scans (timestamp, classification, topography, moisture, image_base64) VALUES (?, ?, ?, ?, ?)",
+        (timestamp, classification, topography, moisture, image_base64)
     )
     conn.commit()
     conn.close()
 
-    # Render complete Diagnostic Report UI matching your original dashboard
+    # Render complete Diagnostic Report UI matching your original dashboard with full details and restored image
     return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -103,9 +109,10 @@ async def predict(file: UploadFile = File(...)):
             <title>Soil Diagnostic Report</title>
             <style>
                 body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }}
-                .container {{ max-width: 550px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }}
-                .header {{ text-align: center; color: #2e7d32; margin-bottom: 20px; }}
-                .report-card {{ background: #fafafa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px; margin-top: 15px; }}
+                .container {{ max-width: 550px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }}
+                .header {{ color: #2e7d32; margin-bottom: 20px; }}
+                .soil-preview {{ width: 100%; max-width: 300px; height: auto; border-radius: 10px; margin: 15px auto; display: block; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }}
+                .report-card {{ background: #fafafa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px; margin-top: 15px; text-align: left; }}
                 .metric {{ margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px; }}
                 .label {{ font-weight: 600; color: #555; }}
                 .badge {{ background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }}
@@ -121,6 +128,8 @@ async def predict(file: UploadFile = File(...)):
                     <h2>🌱 Soil Diagnostic Scanner</h2>
                     <p style="color: #666; font-size: 0.9rem;">Computer Vision Soil Analysis & Crop Advisor</p>
                 </div>
+
+                <img src="data:image/jpeg;base64,{image_base64}" alt="Soil Sample Preview" class="soil-preview">
 
                 <div class="report-card">
                     <h3 style="margin-top:0; color: #2c3e50;">Diagnostic Report</h3>
