@@ -2,16 +2,20 @@ import sqlite3
 import csv
 import io
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 
-# 1. Initialize FastAPI FIRST
 app = FastAPI()
 
-# 2. Mount static directory
+# Mount static files directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 3. Define routes AFTER app is created
+# Root route to serve the main HTML page
+@app.get("/")
+def read_root():
+    return FileResponse("static/index.html")
+
+# Endpoint to export database scan history as CSV
 @app.get("/export-csv")
 def export_csv():
     conn = sqlite3.connect("soil_data.db")
