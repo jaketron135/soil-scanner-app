@@ -42,12 +42,12 @@ def init_db():
 init_db()
 
 def analyze_soil_opencv(image_bytes):
-    """Processes uploaded soil image using OpenCV for texture and moisture heuristic analysis."""
+    """Processes uploaded soil image using OpenCV for texture, moisture heuristic analysis, and crop recommendations."""
     nparr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     
     if img is None:
-        return "Unknown", "Unclear Texture", "Undetermined", "Unable to process image matrix.", ""
+        return "Unknown", "Unclear Texture", "Undetermined", "Unable to process image matrix.", "None", ""
 
     _, buffer = cv2.imencode('.jpg', img)
     image_base64 = base64.b64encode(buffer).decode('utf-8')
@@ -69,16 +69,19 @@ def analyze_soil_opencv(image_bytes):
         topography = "Coarse / Rocky / Rough Surface"
         classification = "Sandy / Gravelly Loam"
         nutrients = "High aeration, moderate drainage. Benefits from organic compost addition."
+        crops = "Sweet Potatoes, Cassava, Peanuts, Watermelon, Legumes"
     elif edge_density > 0.03:
         topography = "Moderate Grain / Standard Slope"
         classification = "Loam Soil"
         nutrients = "Balanced mineral profile (N-P-K friendly). Ideal for a wide range of crops."
+        crops = "Rice, Corn, Sugarcane, Vegetables (Tomatoes, Eggplant, Peppers)"
     else:
         topography = "Smooth / Fine / Dense Surface"
         classification = "Clay / Heavy Clay"
         nutrients = "Rich in minerals (K, Ca) but prone to compaction and poor drainage."
+        crops = "Paddy Rice, Taro (Gabi), Bananas, Citrus"
 
-    return classification, topography, moisture, nutrients, image_base64
+    return classification, topography, moisture, nutrients, crops, image_base64
 
 @app.get("/")
 def read_root():
@@ -88,7 +91,7 @@ def read_root():
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     
-    classification, topography, moisture, nutrients, image_base64 = analyze_soil_opencv(contents)
+    classification, topography, moisture, nutrients, crops, image_base64 = analyze_soil_opencv(contents)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     conn = sqlite3.connect("soil_data.db")
@@ -118,6 +121,7 @@ async def predict(file: UploadFile = File(...)):
                 .badge {{ background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }}
                 .badge-moisture {{ background: #e3f2fd; color: #1565c0; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }}
                 .info-box {{ background: #f9fbe7; border-left: 4px solid #c0ca33; padding: 12px; border-radius: 4px; margin-top: 15px; font-size: 0.95rem; color: #333; }}
+                .crop-box {{ background: #eef9f1; border-left: 4px solid #2e7d32; padding: 12px; border-radius: 4px; margin-top: 10px; font-size: 0.95rem; color: #333; }}
                 .btn {{ display: block; text-align: center; background-color: #2e7d32; color: white; padding: 12px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
                 .btn:hover {{ background-color: #1b5e20; }}
             </style>
@@ -153,6 +157,11 @@ async def predict(file: UploadFile = File(...)):
                     <div class="info-box">
                         <strong>🌱 Soil Health & Nutrients:</strong><br>
                         {nutrients}
+                    </div>
+
+                    <div class="crop-box">
+                        <strong>🌽 Recommended Crops:</strong><br>
+                        {crops}
                     </div>
                 </div>
 
