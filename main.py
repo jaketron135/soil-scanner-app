@@ -19,7 +19,7 @@ HTML_TEMPLATE = """
         .file-upload-label:hover { background: #16a34a; }
         input[type="file"] { display: none; }
         .preview-box { display: none; margin: 16px 0; }
-        .preview-box img, .result-img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .preview-box img, .result-img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
         .scan-btn { width: 100%; background: #22c55e; color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: background 0.2s ease; }
         .scan-btn:hover { background: #16a34a; }
         .results-box { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; text-align: left; margin-bottom: 20px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.01); }
@@ -27,7 +27,9 @@ HTML_TEMPLATE = """
         .metric { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: 13.5px; color: #475569; }
         .badge-clay { background: #f0fdf4; color: #16a34a; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid #dcfce7; }
         .badge-dry { background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid #e0f2fe; }
+        .badge-fert { background: #fefce8; color: #ca8a04; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12.5px; border: 1px solid #fef08a; }
         .health-box { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px; margin-top: 14px; font-size: 13px; color: #166534; border-radius: 0 8px 8px 0; line-height: 1.5; }
+        .fert-box { background: #fefde8; border-left: 4px solid #eab308; padding: 12px; margin-top: 10px; font-size: 13px; color: #854d0e; border-radius: 0 8px 8px 0; line-height: 1.5; }
         .back-btn { display: inline-block; background: #0ea5e9; color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 13.5px; transition: background 0.2s ease; }
         .back-btn:hover { background: #0284c7; }
     </style>
@@ -48,10 +50,16 @@ HTML_TEMPLATE = """
                 <div class="metric"><span>Soil Classification:</span> <span class="badge-clay">Clay / Heavy Clay</span></div>
                 <div class="metric"><span>Topography Texture:</span> <strong>Smooth / Fine / Dense</strong></div>
                 <div class="metric"><span>Moisture Level:</span> <span class="badge-dry">Dry Surface</span></div>
+                <div class="metric"><span>Fertilizer Needed:</span> <span class="badge-fert">Moderate / Required</span></div>
                 
+                <div class="fert-box">
+                    <strong>🧪 Fertilizer Recommendation:</strong><br>
+                    Nitrogen (N) supplement and organic compost recommended to loosen clay compaction and enhance nutrient availability for planting.
+                </div>
+
                 <div class="health-box">
-                    <strong>Soil Health & Nutrients:</strong><br>
-                    Rich in minerals (K, Ca) but prone to compaction. Recommended for legume rotation, maize, or local vegetable cultivation with added organic compost.
+                    <strong>🌱 Soil Health & Nutrients:</strong><br>
+                    Rich in minerals (K, Ca) but prone to compaction. Recommended for legume rotation, maize, or local vegetable cultivation.
                 </div>
             </div>
             <a href="/" class="back-btn">← Scan Another Image</a>
