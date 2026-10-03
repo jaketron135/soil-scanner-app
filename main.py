@@ -31,7 +31,7 @@ HTML_TEMPLATE = """
         }
         .card { 
             background: #ffffff; 
-            padding: 36px 30px; 
+            padding: 32px 26px; 
             border-radius: 20px; 
             box-shadow: 0 12px 30px -8px rgba(21, 128, 61, 0.15), 0 4px 6px -4px rgba(0, 0, 0, 0.05); 
             width: 100%; 
@@ -46,19 +46,19 @@ HTML_TEMPLATE = """
         h2 { 
             margin: 0 0 4px 0; 
             color: #14532d; 
-            font-size: 24px; 
+            font-size: 22px; 
             font-weight: 700;
         }
         p { 
             color: var(--text-muted); 
-            font-size: 13.5px; 
-            margin-bottom: 24px; 
+            font-size: 13px; 
+            margin-bottom: 20px; 
         }
         .file-upload-label { 
             display: block; 
             background: linear-gradient(135deg, #16a34a, #15803d); 
             color: white; 
-            padding: 16px; 
+            padding: 14px; 
             border-radius: 12px; 
             font-weight: 600; 
             cursor: pointer; 
@@ -74,22 +74,22 @@ HTML_TEMPLATE = """
         .preview-box { display: none; margin: 16px 0; }
         .preview-box img, .result-img { 
             width: 100%; 
-            max-height: 240px; 
+            max-height: 200px; 
             object-fit: cover; 
             border-radius: 12px; 
             border: 2px solid var(--border-color); 
-            margin-bottom: 16px; 
+            margin-bottom: 14px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.04); 
         }
         .scan-btn { 
             width: 100%; 
             background: linear-gradient(135deg, #16a34a, #15803d); 
             color: white; 
-            padding: 15px; 
+            padding: 14px; 
             border: none; 
             border-radius: 12px; 
             font-weight: 600; 
-            font-size: 16px; 
+            font-size: 15px; 
             cursor: pointer; 
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
             transition: all 0.2s ease; 
@@ -101,83 +101,98 @@ HTML_TEMPLATE = """
         .results-box { 
             background: #fafaf9; 
             border: 1px solid #e7e5e4; 
-            padding: 22px; 
+            padding: 18px; 
             border-radius: 14px; 
             text-align: left; 
-            margin-bottom: 20px; 
+            margin-bottom: 16px; 
         }
         .results-box h3 { 
             color: #14532d; 
-            font-size: 17px; 
+            font-size: 16px; 
             margin-top: 0; 
             border-bottom: 2px solid var(--border-color); 
-            padding-bottom: 8px; 
-            margin-bottom: 16px; 
+            padding-bottom: 6px; 
+            margin-bottom: 12px; 
         }
         .metric { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            margin: 12px 0; 
-            font-size: 14px; 
+            margin: 8px 0; 
+            font-size: 13.5px; 
             color: var(--text-muted); 
         }
         .badge-clay { 
             background: #dcfce7; 
             color: #166534; 
-            padding: 5px 12px; 
+            padding: 4px 10px; 
             border-radius: 20px; 
             font-weight: 600; 
-            font-size: 12.5px; 
+            font-size: 12px; 
             border: 1px solid #bbf7d0; 
         }
         .badge-dry { 
             background: #e0f2fe; 
             color: #0369a1; 
-            padding: 5px 12px; 
+            padding: 4px 10px; 
             border-radius: 20px; 
             font-weight: 600; 
-            font-size: 12.5px; 
+            font-size: 12px; 
             border: 1px solid #bae6fd; 
         }
         .badge-fert { 
             background: #fef3c7; 
             color: #b45309; 
-            padding: 5px 12px; 
+            padding: 4px 10px; 
             border-radius: 20px; 
             font-weight: 600; 
-            font-size: 12.5px; 
+            font-size: 12px; 
             border: 1px solid #fde68a; 
         }
         .fert-box { 
             background: #fefce8; 
             border-left: 4px solid #ca8a04; 
-            padding: 14px; 
-            margin-top: 16px; 
-            font-size: 13.5px; 
+            padding: 10px 12px; 
+            margin-top: 12px; 
+            font-size: 13px; 
             color: #713f12; 
-            border-radius: 0 10px 10px 0; 
-            line-height: 1.5; 
+            border-radius: 0 8px 8px 0; 
+            line-height: 1.4; 
         }
-        .health-box { 
+        .veg-box { 
             background: #f0fdf4; 
             border-left: 4px solid #16a34a; 
-            padding: 14px; 
-            margin-top: 12px; 
-            font-size: 13.5px; 
+            padding: 10px 12px; 
+            margin-top: 10px; 
+            font-size: 13px; 
             color: #14532d; 
-            border-radius: 0 10px 10px 0; 
+            border-radius: 0 8px 8px 0; 
             line-height: 1.5; 
+        }
+        .veg-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .veg-tag {
+            background: #dcfce7;
+            color: #166534;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            border: 1px solid #bbf7d0;
         }
         .back-btn { 
             display: inline-block; 
             background: #15803d; 
             color: white; 
             text-decoration: none; 
-            padding: 12px 24px; 
+            padding: 11px 20px; 
             border-radius: 10px; 
             font-weight: 600; 
-            font-size: 14px; 
+            font-size: 13.5px; 
             box-shadow: 0 4px 10px rgba(21, 128, 61, 0.2);
             transition: all 0.2s ease; 
         }
@@ -208,12 +223,22 @@ HTML_TEMPLATE = """
                 
                 <div class="fert-box">
                     <strong>🧪 Fertilizer Recommendation:</strong><br>
-                    Nitrogen (N) supplement and organic compost recommended to loosen clay compaction and enhance nutrient availability for planting.
+                    Nitrogen (N) supplement and organic compost recommended to loosen clay compaction.
                 </div>
 
-                <div class="health-box">
-                    <strong>🌱 Soil Health & Nutrients:</strong><br>
-                    Rich in minerals (K, Ca) but prone to compaction. Recommended for legume rotation, maize, or local vegetable cultivation.
+                <div class="veg-box">
+                    <strong>🌱 Recommended Vegetable Varieties:</strong><br>
+                    Suitable for high-nutrient retention heavy soils with proper amendment:
+                    <div class="veg-tags">
+                        <span class="veg-tag">🍅 Tomatoes</span>
+                        <span class="veg-tag">🫑 Bell Peppers</span>
+                        <span class="veg-tag">🥦 Broccoli</span>
+                        <span class="veg-tag">🥬 Cabbage</span>
+                        <span class="veg-tag">🫘 Green Beans</span>
+                        <span class="veg-tag">🌽 Sweet Corn</span>
+                        <span class="veg-tag">🍆 Eggplants</span>
+                        <span class="veg-tag">🥬 Spinach</span>
+                    </div>
                 </div>
             </div>
             <a href="/" class="back-btn">← Scan Another Image</a>
