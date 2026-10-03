@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template_string, request, redirect, url_for
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -22,7 +21,8 @@ def run_diagnostic_model(image_path):
         "recommended_crops": "Sweet Potatoes, Cassava, Peanuts, Watermelon, Legumes"
     }
 
-HTML_TEMPLATE = """
+# Absolute barebones HTML — strictly requires manual submit button click
+CLEAN_HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,8 +34,7 @@ HTML_TEMPLATE = """
         .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 480px; width: 100%; text-align: center; }
         .btn { background-color: #2e7d32; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 15px; display: block; box-sizing: border-box; text-decoration: none; }
         .btn:hover { background-color: #1b5e20; }
-        .error { color: #d32f2f; margin-bottom: 15px; }
-        .img-preview { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0; display: none; }
+        .img-preview { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin: 15px 0; }
         .badge { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
         .row { display: flex; justify-content: space-between; margin: 10px 0; text-align: left; }
     </style>
@@ -47,10 +46,9 @@ HTML_TEMPLATE = """
     <p>Computer Vision Soil Analysis & Crop Advisor</p>
 
     {% if results %}
-        <!-- RESULTS VIEW (Only shown AFTER explicit POST submit) -->
         <div style="text-align: left;">
             <h3>Diagnostic Report</h3>
-            <img src="/{{ image_url }}" alt="Soil Sample Preview" class="img-preview" style="display: block;">
+            <img src="/{{ image_url }}" alt="Soil Sample Preview" class="img-preview">
 
             <div class="row">
                 <span>Soil Classification:</span>
@@ -71,37 +69,13 @@ HTML_TEMPLATE = """
 
             <a href="/" class="btn" style="text-align: center;">🔬 Run Another Scan</a>
         </div>
-
     {% else %}
-        <!-- UPLOAD VIEW (Requires manual button click) -->
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
-
-        <form action="/predict" method="POST" enctype="multipart/form-data" id="scan-form">
-            <input type="file" name="file" id="file-input" accept="image/*" required onchange="showPreview(event)">
-            
-            <img id="preview-img" class="img-preview" alt="Selected Image Preview">
-
-            <!-- NO auto-submit event listeners attached -->
+        <!-- NO JAVASCRIPT / NO AUTO-SUBMIT LISTENERS -->
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <br><br>
             <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
         </form>
-
-        <script>
-            // JS only handles client-side preview; NO automatic form submission
-            function showPreview(event) {
-                const input = event.target;
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = document.getElementById('preview-img');
-                        img.src = e.target.result;
-                        img.style.display = 'block';
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-        </script>
     {% endif %}
 </div>
 
@@ -111,28 +85,25 @@ HTML_TEMPLATE = """
 
 @app.route('/', methods=['GET'])
 def index():
-    # Strict GET route — never runs any diagnostic execution
-    return render_template_string(HTML_TEMPLATE, results=None)
+    return render_template_string(CLEAN_HTML, results=None)
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
-    # Diagnostic execution ONLY runs when the form is submitted via POST button click
-    if 'file' not in request.files:
+    # If route accessed directly via GET, bounce back to index
+    if request.method == 'GET':
         return redirect(url_for('index'))
 
-    file = request.files['file']
+    # Only run logic if a file payload actually exists in the POST request
+    if 'file' in request.files and request.files['file'].filename != '':
+        file = request.files['file']
+        if allowed_file(file.filename):
+            from werkzeug.utils import secure_filename
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
 
-    if file.filename == '':
-        return redirect(url_for('index'))
-
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-
-        # Run diagnostic model execution
-        results = run_diagnostic_model(filepath)
-        return render_template_string(HTML_TEMPLATE, results=results, image_url=filepath)
+            results = run_diagnostic_model(filepath)
+            return render_template_string(CLEAN_HTML, results=results, image_url=filepath)
 
     return redirect(url_for('index'))
 
