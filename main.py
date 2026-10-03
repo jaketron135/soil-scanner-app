@@ -5,19 +5,20 @@ import datetime
 import cv2
 import numpy as np
 import base64
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-# Mount static files directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Database setup
+# Database initialization with automatic column migration
 def init_db():
     conn = sqlite3.connect("soil_data.db")
     cursor = conn.cursor()
+    
+    # Create table if it doesn't exist
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS scans (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,6 +29,13 @@ def init_db():
             image_base64 TEXT
         )
     """)
+    
+    # Ensure image_base64 column exists if database was created by an older version
+    cursor.execute("PRAGMA table_info(scans)")
+    columns = [column[1] for column in cursor.fetchall()]
+    if "image_base64" not in columns:
+        cursor.execute("ALTER TABLE scans ADD COLUMN image_base64 TEXT")
+        
     conn.commit()
     conn.close()
 
@@ -41,15 +49,11 @@ def analyze_soil_opencv(image_bytes):
     if img is None:
         return "Unknown", "Unclear Texture", "Undetermined", "Unable to process image matrix.", ""
 
-    # Generate a base64 version of the image for preview
     _, buffer = cv2.imencode('.jpg', img)
     image_base64 = base64.b64encode(buffer).decode('utf-8')
 
-    # Convert to HSV and Grayscale
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
-    # Calculate average brightness / darkness for moisture heuristic
     mean_brightness = np.mean(gray)
     if mean_brightness < 80:
         moisture = "Moist / High Retention"
@@ -58,7 +62,6 @@ def analyze_soil_opencv(image_bytes):
     else:
         moisture = "Dry Surface"
 
-    # Edge density for texture / topography
     edges = cv2.Canny(gray, 50, 150)
     edge_density = np.sum(edges > 0) / (img.shape[0] * img.shape[1])
     
@@ -85,11 +88,9 @@ def read_root():
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     
-    # Process image with OpenCV
     classification, topography, moisture, nutrients, image_base64 = analyze_soil_opencv(contents)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Log to SQLite
     conn = sqlite3.connect("soil_data.db")
     cursor = conn.cursor()
     cursor.execute(
@@ -99,7 +100,6 @@ async def predict(file: UploadFile = File(...)):
     conn.commit()
     conn.close()
 
-    # Render complete Diagnostic Report UI matching your original dashboard with full details and restored image
     return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html lang="en">
