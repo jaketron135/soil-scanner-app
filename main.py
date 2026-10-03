@@ -258,9 +258,9 @@ HTML_TEMPLATE = """
                             <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=200" alt="Cabbage">
                             <span>Cabbage</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1557844357-7662c3e8b4e0?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
-                            <img src="https://images.unsplash.com/photo-1557844357-7662c3e8b4e0?w=200" alt="Green Beans">
-                            <span>Beans</span>
+                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1567306226416-28f0efdc8849?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
+                            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc8849?w=200" alt="Green Beans">
+                            <span>Green Beans</span>
                         </div>
                         <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
                             <img src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=200" alt="Sweet Corn">
