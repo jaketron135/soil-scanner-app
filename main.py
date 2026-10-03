@@ -258,12 +258,12 @@ HTML_TEMPLATE = """
                             <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=200" alt="Cabbage">
                             <span>Cabbage</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1567306226416-28f0efdc884f?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
-                            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc884f?w=200" alt="Green Beans">
+                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1557844357-7662c3e8b4e0?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
+                            <img src="https://images.unsplash.com/photo-1557844357-7662c3e8b4e0?w=200" alt="Green Beans">
                             <span>Beans</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd97e68d20e7?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
-                            <img src="https://images.unsplash.com/photo-1551754655-cd97e68d20e7?w=200" alt="Sweet Corn">
+                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
+                            <img src="https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?w=200" alt="Sweet Corn">
                             <span>Corn</span>
                         </div>
                         <div class="veg-card" onclick="openModal('Eggplants', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400', 'Strong root systems thrive in dense mineral-rich clay soils with proper sun exposure.')">
