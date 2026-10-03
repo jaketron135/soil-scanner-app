@@ -3,6 +3,9 @@ from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
+# Base64 string of your custom apple logo graphic
+APPLE_LOGO_B64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" # (Replaced dynamically with your image below)
+
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -40,18 +43,29 @@ HTML_TEMPLATE = """
             border: 1px solid var(--border-color); 
             position: relative; 
         }
-        .brand-logo {
+        .brand-container {
             position: absolute;
-            top: 20px;
-            right: 22px;
+            top: 18px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .brand-logo-img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 1px solid #bbf7d0;
+        }
+        .brand-logo-text {
             font-family: 'Caveat', cursive;
-            font-size: 26px;
+            font-size: 25px;
             background: linear-gradient(135deg, #15803d, #16a34a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             line-height: 1;
-            transform: rotate(2deg);
         }
         .logo-icon { font-size: 38px; margin-bottom: 4px; }
         h2 { margin: 0 0 4px 0; color: #14532d; font-size: 22px; font-weight: 700; }
@@ -240,7 +254,10 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="card">
-        <div class="brand-logo">Jaketron</div>
+        <div class="brand-container">
+            <img src="data:image/jpeg;base64,{{ custom_logo_b64 }}" class="brand-logo-img" alt="Logo">
+            <span class="brand-logo-text">Jaketron</span>
+        </div>
         <div class="logo-icon">🌿</div>
         <h2>Soil Diagnostic Scanner</h2>
         <p>Professional Computer Vision Soil Analysis & Crop Advisor</p>
@@ -370,20 +387,28 @@ HTML_TEMPLATE = """
 </html>
 """
 
+def get_logo_b64():
+    try:
+        # If you save your apple image locally as 'logo.jpg', it automatically converts it
+        with open("logo.jpg", "rb") as f:
+            return base64.b64encode(f.read()).decode('utf-8')
+    except FileNotFoundError:
+        return APPLE_LOGO_B64
+
 @app.route('/')
 def home():
-    return render_template_string(HTML_TEMPLATE, result=None)
+    return render_template_string(HTML_TEMPLATE, result=None, custom_logo_b64=get_logo_b64())
 
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files or request.files['file'].filename == '':
-        return render_template_string(HTML_TEMPLATE, result=None)
+        return render_template_string(HTML_TEMPLATE, result=None, custom_logo_b64=get_logo_b64())
     
     file = request.files['file']
     file_bytes = file.read()
     image_base64 = base64.b64encode(file_bytes).decode('utf-8')
     
-    return render_template_string(HTML_TEMPLATE, result=True, filename=file.filename, image_data=image_base64)
+    return render_template_string(HTML_TEMPLATE, result=True, filename=file.filename, image_data=image_base64, custom_logo_b64=get_logo_b64())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
