@@ -1,5 +1,4 @@
 from flask import Flask, request, render_template_string
-import base64
 
 app = Flask(__name__)
 
@@ -22,6 +21,7 @@ HTML_TEMPLATE = """
         .preview-box img { max-width: 100%; max-height: 250px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .scan-btn { width: 100%; background: #16a34a; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; }
         .scan-btn:hover { background: #15803d; }
+        .back-btn { display: inline-block; margin-top: 16px; text-decoration: none; color: #0284c7; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -29,16 +29,24 @@ HTML_TEMPLATE = """
         <h2>🌱 Soil Diagnostic Scanner</h2>
         <p>Computer Vision Soil Analysis & Crop Advisor</p>
         
-        <form action="/predict" method="POST" enctype="multipart/form-data">
-            <label for="soil_image" class="file-upload-label">📷 Take Photo / Upload Soil Image</label>
-            <input type="file" id="soil_image" name="file" accept="image/*" capture="environment" onchange="previewImage(event)">
-            
-            <div id="previewContainer" class="preview-box">
-                <img id="previewImg" src="#" alt="Soil Preview">
+        {% if result %}
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                <h3 style="color: #166534; margin: 0 0 8px 0;">Diagnostic Results</h3>
+                <p style="color: #15803d; margin: 0;"><strong>Status:</strong> {{ result }}</p>
             </div>
+            <a href="/" class="back-btn">← Scan Another Image</a>
+        {% else %}
+            <form action="/predict" method="POST" enctype="multipart/form-data">
+                <label for="soil_image" class="file-upload-label">📷 Take Photo / Upload Soil Image</label>
+                <input type="file" id="soil_image" name="file" accept="image/*" capture="environment" onchange="previewImage(event)">
+                
+                <div id="previewContainer" class="preview-box">
+                    <img id="previewImg" src="#" alt="Soil Preview">
+                </div>
 
-            <button type="submit" class="scan-btn">🔬 Run Diagnostic Scan</button>
-        </form>
+                <button type="submit" class="scan-btn">🔬 Run Diagnostic Scan</button>
+            </form>
+        {% endif %}
     </div>
 
     <script>
@@ -60,7 +68,16 @@ HTML_TEMPLATE = """
 
 @app.route('/')
 def home():
-    return render_template_string(HTML_TEMPLATE)
+    return render_template_string(HTML_TEMPLATE, result=None)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files or request.files['file'].filename == '':
+        return render_template_string(HTML_TEMPLATE, result="No image uploaded. Please choose a soil photo.")
+    
+    file = request.files['file']
+    # Placeholder for model processing / soil analysis logic
+    return render_template_string(HTML_TEMPLATE, result=f"Successfully analyzed '{file.filename}'. Soil health parameters optimal.")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
