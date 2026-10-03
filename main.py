@@ -1,10 +1,10 @@
 import os
-from flask import Flask, render_template_string, request, redirect, url_for
+from flask import Flask, render_template_string, request, redirect, url_for, session
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.secret_key = 'soil_scanner_secret_key_123'  # Required for session state handling
 
-# Configuration
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -68,14 +68,14 @@ HTML_TEMPLATE = """
         <p><b>🌱 Soil Health & Nutrients:</b><br>{{ results.health_info }}</p>
         <p><b>🌽 Recommended Crops:</b><br>{{ results.recommended_crops }}</p>
 
-        <a href="/" class="btn">🔬 Run Another Scan</a>
+        <a href="/clear" class="btn">🔬 Run Another Scan</a>
 
     {% else %}
         {% if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
 
-        <!-- Explicit POST submission on button click -->
+        <!-- Explicit POST submission on click -->
         <form action="/predict" method="POST" enctype="multipart/form-data">
             <input type="file" name="file" accept="image/*" required>
             <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
@@ -89,27 +89,41 @@ HTML_TEMPLATE = """
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template_string(HTML_TEMPLATE, results=None)
+    # Retrieve previous results from session if present, otherwise show blank form
+    results = session.get('results')
+    image_url = session.get('image_url')
+    return render_template_string(HTML_TEMPLATE, results=results, image_url=image_url)
 
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
-        return render_template_string(HTML_TEMPLATE, error="No file selected.", results=None)
+        return redirect(url_for('index'))
 
     file = request.files['file']
 
     if file.filename == '':
-        return render_template_string(HTML_TEMPLATE, error="No file selected.", results=None)
+        return redirect(url_for('index'))
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        results = run_diagnostic_model(filepath)
-        return render_template_string(HTML_TEMPLATE, results=results, image_url=filepath)
+        # Run model and store in session state
+        session['results'] = run_diagnostic_model(filepath)
+        session['image_url'] = filepath
+        
+        # Redirect back to GET route so browser refreshes won't re-trigger the POST request
+        return redirect(url_for('index'))
 
-    return render_template_string(HTML_TEMPLATE, error="Invalid file format.", results=None)
+    return redirect(url_for('index'))
+
+@app.route('/clear', methods=['GET'])
+def clear():
+    # Clear active scan session state to reset to blank form
+    session.pop('results', None)
+    session.pop('image_url', None)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
