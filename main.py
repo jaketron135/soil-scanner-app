@@ -167,37 +167,46 @@ HTML_TEMPLATE = """
             background: white;
             padding: 20px;
             border-radius: 16px;
-            max-width: 360px;
+            max-width: 380px;
             width: 100%;
-            text-align: center;
+            text-align: left;
             position: relative;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
         }
         .modal-content img {
             width: 100%;
-            height: 220px;
+            height: 160px;
             object-fit: cover;
             border-radius: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .modal-content h4 {
-            margin: 0 0 6px 0;
+            margin: 0 0 8px 0;
             color: #14532d;
             font-size: 18px;
+            text-align: center;
         }
-        .modal-content p {
-            font-size: 13px;
-            color: #475569;
+        .modal-details {
+            font-size: 12.5px;
+            color: #334155;
+            line-height: 1.5;
             margin-bottom: 16px;
         }
+        .modal-details p {
+            margin: 4px 0;
+            color: #334155;
+        }
         .close-btn {
+            display: block;
+            width: 100%;
             background: #15803d;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
+            text-align: center;
         }
         .back-btn { 
             display: inline-block; 
@@ -240,37 +249,37 @@ HTML_TEMPLATE = """
 
                 <div class="veg-box">
                     <strong>🌱 Recommended Vegetable Varieties:</strong><br>
-                    Click any crop below to view details and photo:
+                    Click any crop below to view specifications:
                     <div class="veg-grid">
-                        <div class="veg-card" onclick="openModal('Tomatoes', 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400', 'Thrives well in amended clay soils with consistent watering and rich calcium levels.')">
+                        <div class="veg-card" onclick="openModal('Tomatoes', 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400', 'October to February (Dry Season)', '4 plants per m² (Spacing: 50x50 cm)', 'Organic: 3.5 kg / m²<br>Inorganic (14-14-14): 0.06 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200" alt="Tomatoes">
                             <span>Tomatoes</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Bell Peppers', 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400', 'Requires well-drained pockets and adequate phosphorus during early root growth.')">
+                        <div class="veg-card" onclick="openModal('Bell Peppers', 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400', 'November to March', '6 plants per m² (Spacing: 40x40 cm)', 'Organic: 3.0 kg / m²<br>Inorganic (14-14-14): 0.05 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=200" alt="Bell Peppers">
                             <span>Peppers</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Broccoli', 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400', 'Performs exceptionally in moisture-retaining heavy clay soils during cooler temperatures.')">
+                        <div class="veg-card" onclick="openModal('Broccoli', 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400', 'September to December (Cool Months)', '4 to 5 plants per m² (Spacing: 45x45 cm)', 'Organic: 4.0 kg / m²<br>Inorganic (Urea/14-14-14): 0.07 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200" alt="Broccoli">
                             <span>Broccoli</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Cabbage', 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400', 'Appreciates high nutrient retention and compact structure of clay loam soils.')">
+                        <div class="veg-card" onclick="openModal('Cabbage', 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400', 'October to January', '4 plants per m² (Spacing: 50x50 cm)', 'Organic: 4.0 kg / m²<br>Inorganic (16-20-0): 0.08 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=200" alt="Cabbage">
                             <span>Cabbage</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1567306226416-28f0efdc8849?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
+                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1567306226416-28f0efdc8849?w=400', 'September to February', '25 to 30 plants per m² (Direct seeded)', 'Organic: 2.5 kg / m²<br>Inorganic (0-20-20): 0.04 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc8849?w=200" alt="Green Beans">
-                            <span>Green Beans</span>
+                            <span>Beans</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
+                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=400', 'Year-round (Best: May-June or Nov-Dec)', '8 to 10 plants per m² (Spacing: 25x40 cm)', 'Organic: 4.0 kg / m²<br>Inorganic (Urea 46-0-0): 0.07 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=200" alt="Sweet Corn">
-                            <span>Sweet Corn</span>
+                            <span>Corn</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Eggplants', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400', 'Strong root systems thrive in dense mineral-rich clay soils with proper sun exposure.')">
+                        <div class="veg-card" onclick="openModal('Eggplants', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400', 'October to March', '3 plants per m² (Spacing: 60x60 cm)', 'Organic: 3.5 kg / m²<br>Inorganic (14-14-14): 0.06 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200" alt="Eggplants">
                             <span>Eggplants</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Spinach', 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400', 'Grows rapidly in nitrogen-amended plots with sufficient moisture and shade.')">
+                        <div class="veg-card" onclick="openModal('Spinach', 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400', 'November to February (Cool Season)', '40 to 50 plants per m² (Broadcast/Row)', 'Organic: 3.0 kg / m²<br>Inorganic (46-0-0): 0.04 kg / m²')">
                             <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200" alt="Spinach">
                             <span>Spinach</span>
                         </div>
@@ -297,7 +306,9 @@ HTML_TEMPLATE = """
         <div class="modal-content">
             <img id="modalImg" src="" alt="Vegetable">
             <h4 id="modalTitle">Crop Name</h4>
-            <p id="modalDesc">Description text goes here...</p>
+            <div class="modal-details" id="modalTextDetails">
+                <!-- Dynamic content injected via JS -->
+            </div>
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
@@ -315,10 +326,16 @@ HTML_TEMPLATE = """
             }
         }
 
-        function openModal(title, imgSrc, desc) {
+        function openModal(title, imgSrc, month, density, fert) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalImg').src = imgSrc;
-            document.getElementById('modalDesc').innerText = desc;
+            
+            let detailsHtml = `
+                <p><strong>📅 Best Planting Month:</strong><br>${month}</p>
+                <p style="margin-top:8px;"><strong>📏 Surface Area Density:</strong><br>${density}</p>
+                <p style="margin-top:8px;"><strong>🧪 Fertilizer Requirement (per 1 m²):</strong><br>${fert}</p>
+            `;
+            document.getElementById('modalTextDetails').innerHTML = detailsHtml;
             document.getElementById('vegModal').style.display = 'flex';
         }
 
