@@ -13,6 +13,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def run_diagnostic_model(image_path):
+    # Simulated Computer Vision Soil Analysis Output
     return {
         "classification": "Sandy / Gravelly Loam",
         "texture": "Coarse / Rough",
@@ -29,7 +30,7 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soil Diagnostic Scanner</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f8; display: flex; justify-content: center; padding: 40px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; display: flex; justify-content: center; padding: 40px; margin: 0; }
         .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 480px; width: 100%; text-align: center; }
         .btn { background-color: #2e7d32; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 15px; display: block; box-sizing: border-box; text-decoration: none; }
         .btn:hover { background-color: #1b5e20; }
@@ -45,7 +46,6 @@ HTML_TEMPLATE = """
     <p>Computer Vision Soil Analysis & Crop Advisor</p>
 
     {% if results %}
-        <!-- DIAGNOSTIC REPORT RESULT VIEW -->
         <div style="text-align: left;">
             <h3>Diagnostic Report</h3>
             <img src="/{{ image_url }}" alt="Soil Sample Preview" class="img-preview" style="display: block;">
@@ -70,25 +70,25 @@ HTML_TEMPLATE = """
             <a href="/" class="btn" style="text-align: center;">🔬 Run Another Scan</a>
         </div>
     {% else %}
-        <!-- ORIGINAL UPLOAD & MANUAL PREVIEW VIEW -->
-        <form action="/predict" method="POST" enctype="multipart/form-data" id="soil-form">
-            <input type="file" name="file" id="soil-file-input" accept="image/*" required onchange="handleImagePreview(event)">
+        <!-- MANUAL SUBMISSION FORM -->
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required onchange="showPreview(event)">
             
-            <!-- Preview Box -->
-            <img id="soil-preview" class="img-preview" alt="Selected Soil Preview">
+            <!-- Live Preview Element -->
+            <img id="preview-box" class="img-preview" alt="Selected Soil Sample">
 
-            <!-- Manual Submission Button Only -->
+            <!-- Manual Trigger Button (Form only submits when clicked) -->
             <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
         </form>
 
         <script>
-            // Only displays image preview — explicitly DOES NOT submit the form
-            function handleImagePreview(event) {
+            // Displays preview locally in browser; strictly does NOT submit the form
+            function showPreview(event) {
                 const input = event.target;
                 if (input.files && input.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        const preview = document.getElementById('soil-preview');
+                        const preview = document.getElementById('preview-box');
                         preview.src = e.target.result;
                         preview.style.display = 'block';
                     };
