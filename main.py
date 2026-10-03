@@ -123,9 +123,10 @@ def read_root():
                 .container {{ max-width: 550px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }}
                 .header {{ color: #2e7d32; margin-bottom: 20px; }}
                 .upload-box {{ border: 2px dashed #2e7d32; padding: 20px; border-radius: 10px; background: #f9fbf9; margin-bottom: 20px; }}
-                .btn {{ display: inline-block; background-color: #2e7d32; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; width: 100%; box-sizing: border-box; }}
+                .btn {{ display: inline-block; background-color: #2e7d32; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; width: 100%; box-sizing: border-box; font-size: 1rem; }}
                 .btn:hover {{ background-color: #1b5e20; }}
-                .btn-csv {{ background-color: #0288d1; margin-top: 10px; display: block; text-align: center; }}
+                .btn-cam {{ background-color: #2e7d32; display: block; text-align: center; margin-bottom: 15px; width: 100%; padding: 12px; font-weight: bold; border-radius: 8px; color: white; cursor: pointer; }}
+                .btn-csv {{ background-color: #0288d1; margin-top: 10px; display: block; text-align: center; width: 100%; box-sizing: border-box; }}
                 .history-card {{ margin-top: 30px; text-align: left; background: #fafafa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; }}
                 table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
                 th {{ text-align: left; padding: 8px; border-bottom: 2px solid #2e7d32; font-size: 0.85rem; color: #2e7d32; }}
@@ -138,9 +139,11 @@ def read_root():
                     <p style="color: #666; font-size: 0.9rem;">Computer Vision Soil Analysis & Crop Advisor</p>
                 </div>
 
-                <form action="/predict" method="post" enctype="multipart/form-data" class="upload-box">
-                    <p style="margin-top:0; font-weight:600; color:#444;">Select or Take a Photo of Soil Sample</p>
-                    <input type="file" name="file" accept="image/*" capture="environment" required style="margin-bottom: 15px; width: 100%;">
+                <form id="scan-form" action="/predict" method="post" enctype="multipart/form-data" class="upload-box">
+                    <input type="file" id="soil-file" name="file" accept="image/*" capture="environment" required style="display: none;" onchange="document.getElementById('scan-form').submit()">
+                    
+                    <button type="button" class="btn btn-cam" onclick="document.getElementById('soil-file').click()">📸 Capture / Select Soil</button>
+                    
                     <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
                 </form>
 
