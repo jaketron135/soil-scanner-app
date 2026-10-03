@@ -3,7 +3,7 @@ from flask import Flask, render_template_string, request, redirect, url_for, ses
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = 'soil_scanner_secret_key_123'  # Required for session state handling
+app.secret_key = 'soil_scanner_strict_key_999'
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
@@ -75,7 +75,7 @@ HTML_TEMPLATE = """
             <p class="error">{{ error }}</p>
         {% endif %}
 
-        <!-- Explicit POST submission on click -->
+        <!-- Explicit POST action to /predict -->
         <form action="/predict" method="POST" enctype="multipart/form-data">
             <input type="file" name="file" accept="image/*" required>
             <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
@@ -89,13 +89,18 @@ HTML_TEMPLATE = """
 
 @app.route('/', methods=['GET'])
 def index():
-    # Retrieve previous results from session if present, otherwise show blank form
+    # Only reads session if user deliberately triggered a scan
     results = session.get('results')
     image_url = session.get('image_url')
     return render_template_string(HTML_TEMPLATE, results=results, image_url=image_url)
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
+    # If someone accesses /predict directly via GET or refreshes, force redirect to main home page
+    if request.method == 'GET':
+        return redirect(url_for('index'))
+
+    # Process upload only on valid POST request
     if 'file' not in request.files:
         return redirect(url_for('index'))
 
@@ -109,20 +114,15 @@ def predict():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Run model and store in session state
         session['results'] = run_diagnostic_model(filepath)
         session['image_url'] = filepath
-        
-        # Redirect back to GET route so browser refreshes won't re-trigger the POST request
         return redirect(url_for('index'))
 
     return redirect(url_for('index'))
 
 @app.route('/clear', methods=['GET'])
 def clear():
-    # Clear active scan session state to reset to blank form
-    session.pop('results', None)
-    session.pop('image_url', None)
+    session.clear()
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
