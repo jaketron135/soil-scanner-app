@@ -45,6 +45,7 @@ HTML_TEMPLATE = """
     <p>Computer Vision Soil Analysis & Crop Advisor</p>
 
     {% if results %}
+        <!-- DIAGNOSTIC REPORT RESULT VIEW -->
         <div style="text-align: left;">
             <h3>Diagnostic Report</h3>
             <img src="/{{ image_url }}" alt="Soil Sample Preview" class="img-preview" style="display: block;">
@@ -69,27 +70,27 @@ HTML_TEMPLATE = """
             <a href="/" class="btn" style="text-align: center;">🔬 Run Another Scan</a>
         </div>
     {% else %}
-        <!-- MANUAL UPLOAD & PREVIEW FORM -->
-        <form action="/predict" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" id="soil-image-input" accept="image/*" required onchange="previewSelectedImage(event)">
+        <!-- ORIGINAL UPLOAD & MANUAL PREVIEW VIEW -->
+        <form action="/predict" method="POST" enctype="multipart/form-data" id="soil-form">
+            <input type="file" name="file" id="soil-file-input" accept="image/*" required onchange="handleImagePreview(event)">
             
-            <!-- Live Preview Area -->
-            <img id="image-preview-element" class="img-preview" alt="Soil Image Preview">
+            <!-- Preview Box -->
+            <img id="soil-preview" class="img-preview" alt="Selected Soil Preview">
 
-            <!-- Scan Button (Execution happens ONLY when clicked) -->
+            <!-- Manual Submission Button Only -->
             <button type="submit" class="btn">🔬 Run Diagnostic Scan</button>
         </form>
 
         <script>
-            // Live Preview Script without form submission
-            function previewSelectedImage(event) {
+            // Only displays image preview — explicitly DOES NOT submit the form
+            function handleImagePreview(event) {
                 const input = event.target;
                 if (input.files && input.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        const img = document.getElementById('image-preview-element');
-                        img.src = e.target.result;
-                        img.style.display = 'block';
+                        const preview = document.getElementById('soil-preview');
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
                     };
                     reader.readAsDataURL(input.files[0]);
                 }
