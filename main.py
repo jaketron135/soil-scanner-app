@@ -10,6 +10,7 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soil Diagnostic Scanner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-green: #15803d;
@@ -37,6 +38,20 @@ HTML_TEMPLATE = """
             max-width: 500px; 
             text-align: center; 
             border: 1px solid var(--border-color); 
+            position: relative; 
+        }
+        .brand-logo {
+            position: absolute;
+            top: 20px;
+            right: 22px;
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
+            background: linear-gradient(135deg, #15803d, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            line-height: 1;
+            transform: rotate(2deg);
         }
         .logo-icon { font-size: 38px; margin-bottom: 4px; }
         h2 { margin: 0 0 4px 0; color: #14532d; font-size: 22px; font-weight: 700; }
@@ -225,6 +240,7 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="card">
+        <div class="brand-logo">Jaketron</div>
         <div class="logo-icon">🌿</div>
         <h2>Soil Diagnostic Scanner</h2>
         <p>Professional Computer Vision Soil Analysis & Crop Advisor</p>
