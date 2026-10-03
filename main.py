@@ -151,7 +151,7 @@ HTML_TEMPLATE = """
             color: #166534;
             padding: 3px 2px;
         }
-        /* Modal Popup Styling */
+        /* Modal Popup Styling with Video Support */
         .modal {
             display: none;
             position: fixed;
@@ -160,7 +160,7 @@ HTML_TEMPLATE = """
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.75);
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -169,17 +169,19 @@ HTML_TEMPLATE = """
             background: white;
             padding: 20px;
             border-radius: 16px;
-            max-width: 360px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
             position: relative;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        .modal-content img {
+        .modal-content iframe {
             width: 100%;
-            height: 220px;
-            object-fit: cover;
+            height: 200px;
             border-radius: 10px;
+            border: none;
             margin-bottom: 12px;
         }
         .modal-content h4 {
@@ -196,7 +198,7 @@ HTML_TEMPLATE = """
             background: #15803d;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 9px 20px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
@@ -242,37 +244,37 @@ HTML_TEMPLATE = """
 
                 <div class="veg-box">
                     <strong>🌱 Recommended Vegetable Varieties:</strong><br>
-                    Click any crop below to view real preview details:
+                    Click any crop below to view full details and tutorial video:
                     <div class="veg-grid">
-                        <div class="veg-card" onclick="openModal('Tomatoes', 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400', 'Thrives well in amended clay soils with consistent watering and rich calcium levels.')">
+                        <div class="veg-card" onclick="openModal('Tomatoes', 'https://www.youtube.com/embed/5W0b0gJqLqE', 'Thrives well in amended clay soils with consistent watering and rich calcium levels.')">
                             <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200" alt="Tomatoes">
                             <span>Tomatoes</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Bell Peppers', 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400', 'Requires well-drained pockets and adequate phosphorus during early root growth.')">
+                        <div class="veg-card" onclick="openModal('Bell Peppers', 'https://www.youtube.com/embed/Lw2q9R7m3bc', 'Requires well-drained pockets and adequate phosphorus during early root growth.')">
                             <img src="https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=200" alt="Bell Peppers">
                             <span>Peppers</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Broccoli', 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400', 'Performs exceptionally in moisture-retaining heavy clay soils during cooler temperatures.')">
+                        <div class="veg-card" onclick="openModal('Broccoli', 'https://www.youtube.com/embed/6i3kZgHh1n0', 'Performs exceptionally in moisture-retaining heavy clay soils during cooler temperatures.')">
                             <img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200" alt="Broccoli">
                             <span>Broccoli</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Cabbage', 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400', 'Appreciates high nutrient retention and compact structure of clay loam soils.')">
+                        <div class="veg-card" onclick="openModal('Cabbage', 'https://www.youtube.com/embed/8b5J4a3L7k0', 'Appreciates high nutrient retention and compact structure of clay loam soils.')">
                             <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=200" alt="Cabbage">
                             <span>Cabbage</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Green Beans', 'https://images.unsplash.com/photo-1567306226416-28f0efdc884f?w=400', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
+                        <div class="veg-card" onclick="openModal('Green Beans', 'https://www.youtube.com/embed/2q8F9g3x5m1', 'Natural nitrogen fixers that help break up and enrich heavy structured topsoils.')">
                             <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc884f?w=200" alt="Green Beans">
                             <span>Beans</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://images.unsplash.com/photo-1551754655-cd97e68d20e7?w=400', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
+                        <div class="veg-card" onclick="openModal('Sweet Corn', 'https://www.youtube.com/embed/3v7X8k2l9p4', 'Requires high nitrogen uptake and deep root establishment supported by organic compost.')">
                             <img src="https://images.unsplash.com/photo-1551754655-cd97e68d20e7?w=200" alt="Sweet Corn">
                             <span>Corn</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Eggplants', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400', 'Strong root systems thrive in dense mineral-rich clay soils with proper sun exposure.')">
+                        <div class="veg-card" onclick="openModal('Eggplants', 'https://www.youtube.com/embed/9p2K4s8x1m0', 'Strong root systems thrive in dense mineral-rich clay soils with proper sun exposure.')">
                             <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200" alt="Eggplants">
                             <span>Eggplants</span>
                         </div>
-                        <div class="veg-card" onclick="openModal('Spinach', 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400', 'Grows rapidly in nitrogen-amended plots with sufficient moisture and shade.')">
+                        <div class="veg-card" onclick="openModal('Spinach', 'https://www.youtube.com/embed/4x1L9p3v8k2', 'Grows rapidly in nitrogen-amended plots with sufficient moisture and shade.')">
                             <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200" alt="Spinach">
                             <span>Spinach</span>
                         </div>
@@ -294,13 +296,13 @@ HTML_TEMPLATE = """
         {% endif %}
     </div>
 
-    <!-- Popup Modal -->
+    <!-- Video Popup Modal -->
     <div id="vegModal" class="modal">
         <div class="modal-content">
-            <img id="modalImg" src="" alt="Vegetable">
+            <iframe id="modalVideo" src="" allowfullscreen></iframe>
             <h4 id="modalTitle">Crop Name</h4>
             <p id="modalDesc">Description text goes here...</p>
-            <button class="close-btn" onclick="closeModal()">Close</button>
+            <button class="close-btn" onclick="closeModal()">Close Video</button>
         </div>
     </div>
 
@@ -317,21 +319,22 @@ HTML_TEMPLATE = """
             }
         }
 
-        function openModal(title, imgSrc, desc) {
+        function openModal(title, videoUrl, desc) {
             document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalVideo').src = videoUrl;
             document.getElementById('modalDesc').innerText = desc;
             document.getElementById('vegModal').style.display = 'flex';
         }
 
         function closeModal() {
             document.getElementById('vegModal').style.display = 'none';
+            document.getElementById('modalVideo').src = ''; // Stops video playback when closed
         }
 
         window.onclick = function(event) {
             const modal = document.getElementById('vegModal');
             if (event.target == modal) {
-                modal.style.display = 'none';
+                closeModal();
             }
         }
     </script>
