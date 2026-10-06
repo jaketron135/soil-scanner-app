@@ -4,9 +4,8 @@ import base64
 
 app = Flask(__name__)
 
-# Fallback clean SVG representation of your custom apple if needed, 
-# or you can replace the data-uri below with your image's base64 string.
-APPLE_LOGO_B64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+# PASTE YOUR LONG BASE64 STRING INSIDE THE QUOTES BELOW:
+APPLE_B64 = "PASTE_YOUR_BASE64_STRING_HERE"
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -37,13 +36,12 @@ HTML_TEMPLATE = """
 </head>
 <body class="bg-[#f0fdf4] text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Splash Screen / Front Cover with Highlighted Apple & Jaketron -->
+    <!-- Splash Screen / Front Cover with Highlighted Custom Apple & Jaketron -->
     <div id="splash-screen">
         <div class="text-center p-8 space-y-4 max-w-sm">
             <div class="relative inline-block">
                 <div class="absolute -inset-4 bg-emerald-400/30 rounded-full blur-2xl animate-pulse"></div>
-                <!-- If you saved your apple as apple.jpg in your folder, it will load directly from root -->
-                <img src="/apple.jpg" alt="Jaketron Apple Logo" onerror="this.onerror=null; this.src='data:image/jpeg;base64,{{ apple_b64 }}';" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
+                <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
             </div>
             <h1 class="text-4xl font-black text-emerald-900 tracking-tight">Jaketron</h1>
             <p class="text-emerald-700 font-bold text-base tracking-wide uppercase">Soil Diagnostic Scanner</p>
@@ -55,7 +53,7 @@ HTML_TEMPLATE = """
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
         <!-- Header Branding -->
         <div class="flex items-center justify-center space-x-2 mb-2">
-            <img src="/apple.jpg" alt="Apple" onerror="this.onerror=null; this.src='data:image/jpeg;base64,{{ apple_b64 }}';" class="w-8 h-8 object-contain rounded-lg border border-emerald-200">
+            <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Apple" class="w-8 h-8 object-contain rounded-lg border border-emerald-200">
             <span class="text-xl font-bold tracking-tight text-emerald-800">
                 Jaketron
             </span>
@@ -122,7 +120,6 @@ HTML_TEMPLATE = """
     </div>
 
     <script>
-        // Automatically hide splash screen after 3 seconds
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -148,28 +145,10 @@ HTML_TEMPLATE = """
 </html>
 """
 
-@app.route('/apple.jpg')
-def serve_apple():
-    try:
-        return send_from_directory('C:\\soil_scanner', 'apple.jpg')
-    except Exception:
-        return "", 404
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
     image_data = None
-    
-    # Try reading apple.jpg to base64 for backup embedding
-    apple_b64 = APPLE_LOGO_B64
-    try:
-        apple_path = os.path.join("C:\\soil_scanner", "apple.jpg")
-        if os.path.exists(apple_path):
-            with open(apple_path, "rb") as f:
-                apple_b64 = base64.b64encode(f.read()).decode('utf-8')
-    except Exception:
-        pass
-
     if request.method == "POST":
         file = request.files.get("soil_image")
         if file and file.filename != "":
@@ -178,8 +157,7 @@ def index():
             image_data = base64.b64encode(file_bytes).decode('utf-8')
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
-            
-    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=apple_b64)
+    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=APPLE_B64)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
