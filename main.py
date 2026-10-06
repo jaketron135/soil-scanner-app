@@ -1,6 +1,6 @@
 <!-- Add this section to your report container -->
 <div class="weather-box" style="background: #f4f6f8; padding: 15px; border-radius: 8px; margin-top: 15px;">
-    <h4>📍 Local Weather & Climate Context</h4>
+    <h4>Local Weather & Climate Context</h4>
     <p id="weather-status">Detecting local weather and soil micro-climate...</p>
 </div>
 
