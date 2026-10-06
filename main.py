@@ -4,8 +4,16 @@ import base64
 
 app = Flask(__name__)
 
-# PASTE YOUR LONG BASE64 STRING FROM STEP 1 INSIDE THE QUOTES BELOW:
-APPLE_LOGO_B64 = "PASTE_YOUR_APPLE_BASE64_HERE"
+def get_apple_base64():
+    try:
+        # Automatically reads your local apple image file and encodes it to base64
+        apple_path = os.path.join("C:\\soil_scanner", "apple.jpg")
+        if os.path.exists(apple_path):
+            with open(apple_path, "rb") as f:
+                return base64.b64encode(f.read()).decode('utf-8')
+    except Exception:
+        pass
+    return ""
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -53,7 +61,7 @@ HTML_TEMPLATE = """
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
         <!-- Header Branding with Custom Watercolor Apple Logo -->
         <div class="flex items-center justify-center space-x-2 mb-2">
-            <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200">
+            <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200 bg-white">
             <span class="text-xl font-bold tracking-tight text-emerald-800">
                 Jaketron
             </span>
@@ -149,6 +157,8 @@ HTML_TEMPLATE = """
 def index():
     result = None
     image_data = None
+    apple_b64 = get_apple_base64()
+
     if request.method == "POST":
         file = request.files.get("soil_image")
         if file and file.filename != "":
@@ -158,7 +168,7 @@ def index():
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
             
-    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=APPLE_LOGO_B64)
+    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=apple_b64)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
