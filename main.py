@@ -1,10 +1,9 @@
-from flask import Flask, render_template_string, request
+from flask import Flask, render_template_string, request, jsonify
 import os
 import base64
 
 app = Flask(__name__)
 
-# Force load the exact local apple.jpg into base64
 def get_real_apple():
     try:
         with open(r"C:\soil_scanner\apple.jpg", "rb") as f:
@@ -21,6 +20,7 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soil Diagnostic Scanner - Jaketron</title>
+    <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         #splash-screen {
@@ -149,6 +149,18 @@ def index():
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
     return render_template_string(HTML_TEMPLATE, result=result, apple_data=APPLE_B64)
+
+@app.route("/manifest.json")
+def manifest():
+    return jsonify({
+        "name": "Soil Diagnostic Scanner - Jaketron",
+        "short_name": "Soil Scanner",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": "#059669",
+        "description": "Professional computer vision soil analysis & crop advisor tool."
+    })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
