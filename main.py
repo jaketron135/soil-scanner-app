@@ -9,7 +9,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soil Diagnostic Scanner - Mobile Camera Enabled</title>
+    <title>Soil Diagnostic Scanner - Advanced Lab Edition</title>
     <style>
         body { font-family: Arial, sans-serif; background: #eef2f5; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 750px; background: white; margin: 0 auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -32,10 +32,10 @@ HTML_TEMPLATE = """
         <h2>Soil Diagnostic Scanner</h2>
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label>📷 Capture or Upload Soil Sample Image:</label>
-                <!-- capture="environment" opens the rear camera directly on smartphones -->
-                <input type="file" name="soil_image" accept="image/*" capture="environment" required>
-                <span class="camera-hint">Tap to take a live photo with your phone camera or select an existing image from your device.</span>
+                <label>📷 Capture or Upload Soil Sample Image (Optional):</label>
+                <!-- Removed 'required' so it never blocks submission -->
+                <input type="file" name="soil_image" accept="image/*" capture="environment">
+                <span class="camera-hint">Snap a live photo with your mobile camera or select an existing image.</span>
             </div>
             <div class="form-group">
                 <label>Select Soil Texture / Type:</label>
