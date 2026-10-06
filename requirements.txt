@@ -1,5 +1,4 @@
-fastapi
-uvicorn
-opencv-python-headless
-numpy
-python-multipart
+Flask==3.0.2
+gunicorn==21.2.0
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
