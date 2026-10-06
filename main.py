@@ -125,7 +125,7 @@ HTML_TEMPLATE = """
             background: #fff;
         }
         
-        /* Loader Overlay Styles */
+        /* High-Tech Radar Loader Overlay */
         #loader-overlay {
             display: none;
             text-align: center;
@@ -156,7 +156,7 @@ HTML_TEMPLATE = """
             color: #718093;
         }
 
-        /* Multiple Fresh Leaves Opening Curtain */
+        /* Cinematic Botanical Leaf Shutter Reveal */
         #leaf-transition {
             display: none;
             position: absolute;
@@ -168,97 +168,114 @@ HTML_TEMPLATE = """
             pointer-events: none;
             overflow: hidden;
             border-radius: 24px;
+            perspective: 1000px;
         }
-        .fresh-leaf {
+        .botanical-leaf {
             position: absolute;
-            width: 55%;
-            height: 55%;
-            background: radial-gradient(circle at 30% 30%, #52be80 0%, #229954 50%, #117a65 100%);
-            box-shadow: inset 0 0 25px rgba(255,255,255,0.4), 0 8px 20px rgba(0,0,0,0.3);
+            width: 60%;
+            height: 60%;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 40%, #145a32 100%);
+            box-shadow: inset 0 0 35px rgba(255, 255, 255, 0.35), 0 15px 30px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 1.4s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s ease;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease;
         }
-        /* Realistic organic leaf contour shapes using border-radius */
-        .leaf-top-left {
-            top: -10%;
-            left: -10%;
-            border-radius: 0 80% 20% 80%;
+        /* Curvature mimicking natural leaf blades */
+        .leaf-tl {
+            top: -12%; left: -12%;
+            border-radius: 0 90% 10% 90%;
             transform-origin: top left;
         }
-        .leaf-top-right {
-            top: -10%;
-            right: -10%;
-            border-radius: 80% 0 80% 20%;
+        .leaf-tr {
+            top: -12%; right: -12%;
+            border-radius: 90% 0 90% 10%;
             transform-origin: top right;
         }
-        .leaf-bottom-left {
-            bottom: -10%;
-            left: -10%;
-            border-radius: 80% 20% 80% 0%;
+        .leaf-bl {
+            bottom: -12%; left: -12%;
+            border-radius: 90% 10% 90% 0%;
             transform-origin: bottom left;
         }
-        .leaf-bottom-right {
-            bottom: -10%;
-            right: -10%;
-            border-radius: 20% 80% 0% 80%;
+        .leaf-br {
+            bottom: -12%; right: -12%;
+            border-radius: 10% 90% 0% 90%;
             transform-origin: bottom right;
         }
         
         .leaf-badge {
-            color: #fff;
+            color: #ffffff;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            background: rgba(0, 0, 0, 0.15);
-            padding: 8px 14px;
-            border-radius: 20px;
-            backdrop-filter: blur(2px);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px 16px;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* Leaf opening directions */
-        .open-tl { transform: translate(-100%, -100%) rotate(-20deg); opacity: 0; }
-        .open-tr { transform: translate(100%, -100%) rotate(20deg); opacity: 0; }
-        .open-bl { transform: translate(-100%, 100%) rotate(20deg); opacity: 0; }
-        .open-br { transform: translate(100%, 100%) rotate(-20deg); opacity: 0; }
+        /* Cinematic opening directions with smooth rotations */
+        .reveal-tl { transform: translate(-110%, -110%) rotate(-35deg) scale(0.9); opacity: 0; }
+        .reveal-tr { transform: translate(110%, -110%) rotate(35deg) scale(0.9); opacity: 0; }
+        .reveal-bl { transform: translate(-110%, 110%) rotate(35deg) scale(0.9); opacity: 0; }
+        .reveal-br { transform: translate(110%, 110%) rotate(-35deg) scale(0.9); opacity: 0; }
 
         .result-container { 
             margin-top: 25px; 
             border-top: 2px solid #f1f2f6; 
             padding-top: 20px; 
-            animation: fadeIn 0.5s ease-in-out; 
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         .image-preview-box {
             margin-bottom: 15px;
             text-align: center;
             background: #f8f9fa;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 16px;
             border: 1px solid #dcdde1;
+            position: relative;
+            overflow: hidden;
         }
         .image-preview-box img {
             max-width: 100%;
             max-height: 200px;
-            border-radius: 8px;
+            border-radius: 10px;
             object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        /* Laser scanning line overlay on the captured image */
+        .scanner-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #2ecc71;
+            box-shadow: 0 0 12px #2ecc71, 0 0 20px #27ae60;
+            animation: scanLaser 2s ease-in-out infinite alternate;
+        }
+        @keyframes scanLaser {
+            0% { top: 10px; }
+            100% { top: calc(100% - 10px); }
         }
 
-        .result-box { background: #e8f8f5; border-left: 5px solid #27ae60; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+        .result-box { background: #e8f8f5; border-left: 5px solid #27ae60; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 14px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.08); }
         .result-box h3 { margin-top: 0; color: #117a65; font-size: 16px; margin-bottom: 6px; }
         
-        .lab-box { background: #fef9e7; border-left: 5px solid #f39c12; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; }
+        .lab-box { background: #fef9e7; border-left: 5px solid #f39c12; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 13px; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.08); }
         .lab-box h4 { margin-top: 0; color: #b7950b; font-size: 15px; margin-bottom: 10px; }
         .lab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; }
-        .lab-grid li { background: rgba(255,255,255,0.7); padding: 8px 10px; border-radius: 6px; }
+        .lab-grid li { background: rgba(255,255,255,0.8); padding: 9px 12px; border-radius: 8px; border: 1px solid rgba(243, 156, 18, 0.2); }
         
-        .recommendation-box { background: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; }
+        .recommendation-box { background: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; border-radius: 12px; font-size: 13px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(41, 128, 185, 0.08); }
         .recommendation-box h4 { margin-top: 0; color: #1b4f72; font-size: 15px; margin-bottom: 6px; }
         
-        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 12px; border-left: 5px solid #3498db; font-size: 13px; }
+        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 14px; border-left: 5px solid #3498db; font-size: 13px; }
         .weather-box h4 { margin-top: 0; color: #2471a3; font-size: 14px; margin-bottom: 6px; text-transform: uppercase; }
         
         #file-status {
@@ -273,19 +290,19 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container" id="main-container">
-        <!-- Multiple Real Fresh Leaves Animation Overlay -->
+        <!-- Cinematic Botanical Shutter Overlay -->
         <div id="leaf-transition">
-            <div class="fresh-leaf leaf-top-left" id="leaf-tl">
-                <div class="leaf-badge" style="margin-top: 40px; margin-left: 40px;">🌿 Analyzing Soil...</div>
+            <div class="botanical-leaf leaf-tl" id="leaf-tl">
+                <div class="leaf-badge" style="margin-top: 50px; margin-left: 50px;">🌿 Scanning Soil Matrix</div>
             </div>
-            <div class="fresh-leaf leaf-top-right" id="leaf-tr">
-                <div class="leaf-badge" style="margin-top: 40px; margin-right: 40px;">🌱 Macro-Nutrients</div>
+            <div class="botanical-leaf leaf-tr" id="leaf-tr">
+                <div class="leaf-badge" style="margin-top: 50px; margin-right: 50px;">🌱 Macro-Nutrients</div>
             </div>
-            <div class="fresh-leaf leaf-bottom-left" id="leaf-bl">
-                <div class="leaf-badge" style="margin-bottom: 40px; margin-left: 40px;">🍃 USDA Profiling</div>
+            <div class="botanical-leaf leaf-bl" id="leaf-bl">
+                <div class="leaf-badge" style="margin-bottom: 50px; margin-left: 50px;">🍃 USDA Profiling</div>
             </div>
-            <div class="fresh-leaf leaf-bottom-right" id="leaf-br">
-                <div class="leaf-badge" style="margin-bottom: 40px; margin-right: 40px;">✨ Ready!</div>
+            <div class="botanical-leaf leaf-br" id="leaf-br">
+                <div class="leaf-badge" style="margin-bottom: 50px; margin-right: 50px;">✨ Laboratory Ready</div>
             </div>
         </div>
 
@@ -317,7 +334,7 @@ HTML_TEMPLATE = """
             <button type="submit" class="btn-custom" style="background: #196f3d;" id="submit-btn">🔬 Run Diagnostic Scan</button>
         </form>
 
-        <!-- Loading Animation Container -->
+        <!-- Loading Radar Overlay -->
         <div id="loader-overlay">
             <div class="scanner-ring"></div>
             <div class="scanner-text" id="loader-status-text">Calibrating computer vision matrices...</div>
@@ -328,7 +345,8 @@ HTML_TEMPLATE = """
         <div class="result-container" id="results-panel">
             {% if image_data %}
             <div class="image-preview-box">
-                <div style="font-size: 12px; font-weight: 600; color: #718093; margin-bottom: 6px; text-transform: uppercase;">Captured Soil Sample</div>
+                <div class="scanner-beam"></div>
+                <div style="font-size: 12px; font-weight: 700; color: #1b4d3e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Verified Soil Sample Telemetry</div>
                 <img src="{{ image_data }}" alt="Soil Sample Preview">
             </div>
             {% endif %}
@@ -386,17 +404,17 @@ HTML_TEMPLATE = """
             if(leafTransition) {
                 leafTransition.style.display = 'block';
                 
-                // Unfurl/slide multiple fresh leaves outward simultaneously
+                // Cinematic unwrap of botanical leaves
                 setTimeout(() => {
-                    document.getElementById('leaf-tl').classList.add('open-tl');
-                    document.getElementById('leaf-tr').classList.add('open-tr');
-                    document.getElementById('leaf-bl').classList.add('open-bl');
-                    document.getElementById('leaf-br').classList.add('open-br');
-                }, 400);
+                    document.getElementById('leaf-tl').classList.add('reveal-tl');
+                    document.getElementById('leaf-tr').classList.add('reveal-tr');
+                    document.getElementById('leaf-bl').classList.add('reveal-bl');
+                    document.getElementById('leaf-br').classList.add('reveal-br');
+                }, 300);
 
                 setTimeout(() => {
                     leafTransition.style.display = 'none';
-                }, 1600);
+                }, 1500);
             }
         });
     }
@@ -413,14 +431,14 @@ HTML_TEMPLATE = """
         const statusText = document.getElementById('loader-status-text');
         setTimeout(() => {
             if(statusText) statusText.innerText = "Analyzing pixel hue, texture & aggregate density...";
-        }, 600);
+        }, 500);
         setTimeout(() => {
             if(statusText) statusText.innerText = "Synthesizing macro-nutrient profile...";
-        }, 1200);
+        }, 1100);
 
         setTimeout(() => {
             event.target.submit();
-        }, 1800);
+        }, 1700);
     }
 
     if (navigator.geolocation) {
@@ -491,34 +509,4 @@ def index():
             lab = {
                 "classification": "Sandy, siliceous, hyperthermic Typic Quartzipsamments",
                 "ph": "6.2", "ph_status": "Moderately Acidic",
-                "n": "Low (0.6 g/kg - High Leaching)", "p": "Low (8 mg/kg)", "k": "Low (65 mg/kg)",
-                "organic": "1.1% (Low Organic Fraction)", "cec": "6.5 meq/100g (Low Capacity)",
-                "whc": "Low (0.12 cm3/cm3 - Rapid Drain)",
-                "remedy": "Utilize split-dose fertigation to prevent nutrient washout. Heavily amend with biochar, peat, or aged manure to boost water retention and buffer exchange sites."
-            }
-        elif soil_type == 'silt':
-            analysis = "Alluvial Silt Loam Detected: Smooth tactile texture with optimal capillary moisture transport. Highly fertile matrix sensitive to compaction from heavy machinery."
-            lab = {
-                "classification": "Coarse-silty, mixed, superactive, mesic Typic Hapludalfs",
-                "ph": "7.0", "ph_status": "Neutral (Optimal Biological)",
-                "n": "High (3.2 g/kg)", "p": "Medium (22 mg/kg)", "k": "Medium-High (210 mg/kg)",
-                "organic": "3.2% (Good Microbial Biomass)", "cec": "22 meq/100g (Balanced)",
-                "whc": "High (0.30 cm3/cm3)",
-                "remedy": "Apply continuous cover cropping or surface mulching to safeguard against heavy rain splash erosion and crusting. Restrict heavy equipment passes when damp."
-            }
-        else:
-            analysis = "Optimal Loam Matrix Detected: Premium agronomic balance of sand, silt, and clay fractions. Delivers superior root aeration and nutrient availability."
-            lab = {
-                "classification": "Fine-loamy, mixed, active, mesic Typic Argiudolls",
-                "ph": "6.5", "ph_status": "Slightly Acidic (Ideal Range)",
-                "n": "High (3.8 g/kg)", "p": "High (35 mg/kg Mehlich-3)", "k": "High (320 mg/kg)",
-                "organic": "4.0% (High Microbial Activity)", "cec": "26 meq/100g (Optimal)",
-                "whc": "Optimal (0.26 cm3/cm3)",
-                "remedy": "Maintain standard crop rotation cycles and light organic topdressing. This matrix represents an ideal baseline configuration for high-yield cultivation."
-            }
-            
-    return render_template_string(HTML_TEMPLATE, show_results=show_results, analysis=analysis, lab=lab, image_data=image_data)
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+                "n": "Low (0.6 g/kg - High Leaching)", "p": "Low (8 mg/kg)", "k": "Low (
