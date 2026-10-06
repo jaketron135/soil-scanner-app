@@ -12,14 +12,46 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soil Diagnostic Scanner - Jaketron</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+        }
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+    </style>
 </head>
 <body class="bg-[#f0fdf4] text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Splash Screen / Front Cover -->
+    <div id="splash-screen">
+        <div class="text-center p-6 space-y-4">
+            <div class="relative inline-block">
+                <div class="absolute -inset-2 bg-emerald-400/20 rounded-full blur-xl animate-pulse"></div>
+                <img src="https://i.ibb.co/3ykCjV7/apple-logo.png" alt="Jaketron Apple Logo" class="relative w-40 h-40 object-contain mx-auto drop-shadow-md">
+            </div>
+            <h1 class="text-3xl font-extrabold text-emerald-900 tracking-tight">Jaketron</h1>
+            <p class="text-emerald-700 font-semibold text-sm tracking-wide uppercase">Soil Diagnostic Scanner</p>
+            <p class="text-slate-400 text-xs mt-4 animate-pulse">Loading Agricultural Intelligence...</p>
+        </div>
+    </div>
+
+    <!-- Main App Interface -->
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
         <!-- Header Branding -->
         <div class="flex items-center justify-center space-x-2 mb-2">
-            <span class="text-2xl">🌿</span>
-            <span class="text-xl font-bold tracking-tight text-emerald-800 flex items-center gap-1">
-                🍎 Jaketron
+            <img src="https://i.ibb.co/3ykCjV7/apple-logo.png" alt="Apple" class="w-7 h-7 object-contain">
+            <span class="text-xl font-bold tracking-tight text-emerald-800">
+                Jaketron
             </span>
         </div>
 
@@ -84,6 +116,16 @@ HTML_TEMPLATE = """
     </div>
 
     <script>
+        // Automatically hide the front cover / splash screen after 3 seconds
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.classList.add('fade-out');
+                }
+            }, 3000);
+        });
+
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function() {
