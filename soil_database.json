@@ -1,0 +1,134 @@
+{
+    "loam": {
+        "ideal_ph": "6.0 - 7.0",
+        "cec": "15 - 25 meq/100g (High nutrient retention)",
+        "organic_matter": "3.5% - 5.0% (Optimal balance)",
+        "salinity_ec": "< 1.0 dS/m (Non-saline)",
+        "recommendation": "Ideal agricultural soil. Maintain organic matter through regular compost additions and standard balanced NPK fertilization.",
+        "crops": [
+            {
+                "name": "Tomatoes",
+                "season": "Dry Season / Cool Months",
+                "spacing": "50 cm x 50 cm",
+                "fert": "Balanced NPK (14-14-14) during vegetative stage; high potassium during fruiting."
+            },
+            {
+                "name": "Lettuce",
+                "season": "Cool Season / Year-round shaded",
+                "spacing": "20 cm x 20 cm",
+                "fert": "Nitrogen-rich organic fertilizer; frequent light watering."
+            },
+            {
+                "name": "Carrots",
+                "season": "Cool Dry Season",
+                "spacing": "15 cm x 5 cm",
+                "fert": "Low nitrogen, high phosphorus and potassium to encourage root development."
+            },
+            {
+                "name": "Peppers",
+                "season": "Warm Season",
+                "spacing": "40 cm x 40 cm",
+                "fert": "Side-dress with balanced fertilizer when first flowers appear."
+            }
+        ]
+    },
+    "clay": {
+        "ideal_ph": "6.5 - 7.5",
+        "cec": "> 30 meq/100g (Very high nutrient retention)",
+        "organic_matter": "2.0% - 3.0% (Moderate)",
+        "salinity_ec": "< 1.2 dS/m (Slightly saline)",
+        "recommendation": "Heavy texture. Incorporate coarse organic matter and gypsum to improve aeration, drainage, and prevent waterlogging.",
+        "crops": [
+            {
+                "name": "Rice",
+                "season": "Wet Season / Puddled Fields",
+                "spacing": "20 cm x 20 cm",
+                "fert": "Split application of nitrogen (Urea) at tillering and panicle initiation."
+            },
+            {
+                "name": "Broccoli",
+                "season": "Cool Dry Season",
+                "spacing": "45 cm x 45 cm",
+                "fert": "High nitrogen and boron requirements to prevent hollow stem."
+            },
+            {
+                "name": "Cabbage",
+                "season": "Cool Dry Season",
+                "spacing": "40 cm x 40 cm",
+                "fert": "Regular nitrogen top-dressing during early head formation."
+            },
+            {
+                "name": "Spinach",
+                "season": "Cool Months",
+                "spacing": "15 cm x 10 cm",
+                "fert": "Nitrogen-focused fertilizer for lush green leaf growth."
+            }
+        ]
+    },
+    "sandy": {
+        "ideal_ph": "5.8 - 6.5",
+        "cec": "< 10 meq/100g (Low nutrient retention)",
+        "organic_matter": "< 1.5% (Requires heavy organic amendment)",
+        "salinity_ec": "< 0.8 dS/m (Non-saline)",
+        "recommendation": "Incorporate high amounts of decomposed organic manure, green manures, and heavy mulch layers to trap moisture and nutrients.",
+        "crops": [
+            {
+                "name": "Peanuts",
+                "season": "Early Dry Season / Wet Transition",
+                "spacing": "30 cm x 10 cm",
+                "fert": "Low nitrogen; apply phosphorus and potassium at planting."
+            },
+            {
+                "name": "Watermelon",
+                "season": "Dry Season (Full Sun)",
+                "spacing": "100 cm x 100 cm",
+                "fert": "High potassium and balanced NPK during vine elongation."
+            },
+            {
+                "name": "Sweet Potato",
+                "season": "Year-round (Best in dry months)",
+                "spacing": "30 cm between slips",
+                "fert": "Moderate potassium; avoid excessive nitrogen to prevent vine overgrowth."
+            },
+            {
+                "name": "Legumes",
+                "season": "Post-Monsoon / Dry Season",
+                "spacing": "20 cm x 5 cm",
+                "fert": "Inoculate seeds with Rhizobium; minimal nitrogen required."
+            }
+        ]
+    },
+    "silt": {
+        "ideal_ph": "6.0 - 6.8",
+        "cec": "12 - 20 meq/100g (Moderate retention)",
+        "organic_matter": "2.5% - 4.0% (Good)",
+        "salinity_ec": "< 1.0 dS/m (Non-saline)",
+        "recommendation": "Prone to crusting if left bare. Use organic cover crops and avoid heavy machinery when wet to preserve smooth crumb structure.",
+        "crops": [
+            {
+                "name": "Corn",
+                "season": "Start of Wet or Dry Season",
+                "spacing": "70 cm x 20 cm",
+                "fert": "High nitrogen demand split into basal and side-dress applications."
+            },
+            {
+                "name": "Wheat",
+                "season": "Cool Dry Season",
+                "spacing": "Broadcast / 20 cm rows",
+                "fert": "Balanced NPK with targeted nitrogen at tillering."
+            },
+            {
+                "name": "Soybeans",
+                "season": "Wet Season",
+                "spacing": "40 cm x 10 cm",
+                "fert": "Phosphorus and Potassium focused; fixes own nitrogen."
+            },
+            {
+                "name": "Squash",
+                "season": "Warm Season",
+                "spacing": "100 cm x 100 cm",
+                "fert": "Generous organic compost and balanced NPK fertilizer."
+            }
+        ]
+    }
+}
