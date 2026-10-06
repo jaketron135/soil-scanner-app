@@ -1,4 +1,5 @@
 import os
+import base64
 from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
@@ -130,6 +131,21 @@ HTML_TEMPLATE = """
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
+        .image-preview-box {
+            margin-bottom: 15px;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #dcdde1;
+        }
+        .image-preview-box img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
         .result-box { background: #e8f8f5; border-left: 5px solid #27ae60; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
         .result-box h3 { margin-top: 0; color: #117a65; font-size: 16px; margin-bottom: 6px; }
         
@@ -186,6 +202,13 @@ HTML_TEMPLATE = """
 
         {% if show_results %}
         <div class="result-container">
+            {% if image_data %}
+            <div class="image-preview-box">
+                <div style="font-size: 12px; font-weight: 600; color: #718093; margin-bottom: 6px; text-transform: uppercase;">Captured Soil Sample</div>
+                <img src="{{ image_data }}" alt="Soil Sample Preview">
+            </div>
+            {% endif %}
+
             <div class="result-box">
                 <h3>Diagnostic Overview</h3>
                 <p>{{ analysis }}</p>
@@ -269,9 +292,18 @@ def index():
     show_results = False
     analysis = ""
     lab = {}
+    image_data = None
     
     if request.method == 'POST':
         show_results = True
+        
+        # Handle uploaded image processing
+        uploaded_file = request.files.get('soil_image')
+        if uploaded_file and uploaded_file.filename != '':
+            file_bytes = uploaded_file.read()
+            encoded_img = base64.b64encode(file_bytes).decode('utf-8')
+            image_data = f"data:{uploaded_file.content_type};base64,{encoded_img}"
+
         soil_type = request.form.get('soil_type', 'loam')
         if soil_type == 'clay':
             analysis = "Heavy Vertisol Clay Detected: Exceptional nutrient holding capacity with dense structural aggregation. Prone to moisture locking and surface crusting."
@@ -314,7 +346,7 @@ def index():
                 "remedy": "Maintain standard crop rotation cycles and light organic topdressing. This matrix represents an ideal baseline configuration for high-yield cultivation."
             }
             
-    return render_template_string(HTML_TEMPLATE, show_results=show_results, analysis=analysis, lab=lab)
+    return render_template_string(HTML_TEMPLATE, show_results=show_results, analysis=analysis, lab=lab, image_data=image_data)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
