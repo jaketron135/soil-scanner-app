@@ -122,7 +122,6 @@ HTML_TEMPLATE = """
             background: #fff;
         }
         
-        /* Popup / Hidden State until Scanned */
         .result-container { 
             margin-top: 25px; 
             border-top: 2px solid #f1f2f6; 
@@ -142,7 +141,7 @@ HTML_TEMPLATE = """
         .recommendation-box { background: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; }
         .recommendation-box h4 { margin-top: 0; color: #1b4f72; font-size: 15px; margin-bottom: 6px; }
         
-        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #3498db; font-size: 13px; }
+        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 12px; border-left: 5px solid #3498db; font-size: 13px; }
         .weather-box h4 { margin-top: 0; color: #2471a3; font-size: 14px; margin-bottom: 6px; text-transform: uppercase; }
         
         #file-status {
@@ -210,13 +209,13 @@ HTML_TEMPLATE = """
                 <h4>Targeted Agronomic Remediation & Management</h4>
                 <p>{{ lab.remedy }}</p>
             </div>
+
+            <div class="weather-box">
+                <h4>Local Weather & Climate Context</h4>
+                <p id="weather-status" style="margin-bottom: 0; color: #57606f;">Detecting local weather telemetry...</p>
+            </div>
         </div>
         {% endif %}
-
-        <div class="weather-box">
-            <h4>Local Weather & Climate Context</h4>
-            <p id="weather-status" style="margin-bottom: 0; color: #57606f;">Detecting local weather telemetry...</p>
-        </div>
     </div>
 
     <script>
@@ -242,20 +241,23 @@ HTML_TEMPLATE = """
                         const humidity = data.current.relative_humidity_2m;
                         const precip = data.current.precipitation;
                         
-                        document.getElementById('weather-status').innerHTML = `
-                            <b>Temperature:</b> ${temp} °C | <b>Humidity:</b> ${humidity}% | <b>Precipitation:</b> ${precip} mm<br>
-                            <span style="font-size: 11px; font-style: italic; color: #7f8c8d;">Micro-climate tracking synchronized for irrigation tuning.</span>
-                        `;
+                        const weatherElement = document.getElementById('weather-status');
+                        if(weatherElement) {
+                            weatherElement.innerHTML = `
+                                <b>Temperature:</b> ${temp} °C | <b>Humidity:</b> ${humidity}% | <b>Precipitation:</b> ${precip} mm<br>
+                                <span style="font-size: 11px; font-style: italic; color: #7f8c8d;">Micro-climate tracking synchronized for irrigation tuning.</span>
+                            `;
+                        }
                     }
                 })
                 .catch(err => {
-                    document.getElementById('weather-status').innerText = "Unable to reach regional weather telemetry nodes.";
+                    const weatherElement = document.getElementById('weather-status');
+                    if(weatherElement) weatherElement.innerText = "Unable to reach regional weather telemetry nodes.";
                 });
         }, error => {
-            document.getElementById('weather-status').innerText = "Location telemetry disabled. Enable GPS for local tuning.";
+            const weatherElement = document.getElementById('weather-status');
+            if(weatherElement) weatherElement.innerText = "Location telemetry disabled. Enable GPS for local tuning.";
         });
-    } else {
-        document.getElementById('weather-status').innerText = "Geolocation not supported.";
     }
     </script>
 </body>
