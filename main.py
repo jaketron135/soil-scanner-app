@@ -33,7 +33,9 @@ HTML_TEMPLATE = """
         button:hover { background: #219653; }
         button:active { transform: scale(0.99); }
         
-        .result-container { margin-top: 30px; border-top: 2px solid var(--border-color); padding-top: 25px; }
+        .result-container { margin-top: 30px; border-top: 2px solid var(--border-color); padding-top: 25px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .result-box { background: #e8f8f5; border-left: 6px solid var(--accent); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
         .result-box h3 { margin-top: 0; color: #117a65; font-size: 20px; }
         
@@ -69,6 +71,7 @@ HTML_TEMPLATE = """
                 <div class="form-group" style="margin-top: 20px;">
                     <label>Select Soil Texture Classification</label>
                     <select name="soil_type">
+                        <option value="">-- Choose soil type classification --</option>
                         <option value="loam">Loam (Balanced USDA Standard)</option>
                         <option value="clay">Clay (Vertisol / Heavy Dense Matrix)</option>
                         <option value="sandy">Sandy (Entisol / Coarse Draining)</option>
