@@ -22,6 +22,7 @@ HTML_TEMPLATE = """
             align-items: center;
             min-height: 100vh;
             color: #2f3640; 
+            overflow-x: hidden;
         }
         .container { 
             width: 100%;
@@ -123,11 +124,97 @@ HTML_TEMPLATE = """
             background: #fff;
         }
         
+        /* Loader Overlay Styles */
+        #loader-overlay {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .scanner-ring {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px auto;
+            border: 5px solid #e8f8f5;
+            border-top: 5px solid #27ae60;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .scanner-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1b4d3e;
+            margin-bottom: 5px;
+        }
+        .scanner-subtext {
+            font-size: 12px;
+            color: #718093;
+        }
+
+        /* Leaf Opening Animation Curtain Container */
+        #leaf-transition {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1e8449;
+            border-radius: 24px;
+            overflow: hidden;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+        .leaf-half {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #27ae60 0%, #145a32 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .leaf-left {
+            left: 0;
+            border-top-left-radius: 24px;
+            border-bottom-left-radius: 24px;
+            border-right: 2px solid rgba(255,255,255,0.2);
+            transform-origin: left;
+        }
+        .leaf-right {
+            right: 0;
+            border-top-right-radius: 24px;
+            border-bottom-right-radius: 24px;
+            border-left: 2px solid rgba(255,255,255,0.2);
+            transform-origin: right;
+        }
+        .leaf-content {
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            padding: 20px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .open-left {
+            transform: translateX(-100%);
+        }
+        .open-right {
+            transform: translateX(100%);
+        }
+
         .result-container { 
             margin-top: 25px; 
             border-top: 2px solid #f1f2f6; 
             padding-top: 20px; 
-            animation: fadeIn 0.4s ease-in-out; 
+            animation: fadeIn 0.5s ease-in-out; 
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -171,7 +258,17 @@ HTML_TEMPLATE = """
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="main-container">
+        <!-- Leaf Opening Curtain Overlay -->
+        <div id="leaf-transition">
+            <div class="leaf-half leaf-left" id="leaf-l">
+                <div class="leaf-content" style="text-align: right;">🌿 Unfurling<br>Soil Metrics...</div>
+            </div>
+            <div class="leaf-half leaf-right" id="leaf-r">
+                <div class="leaf-content" style="text-align: left;">🌱 Laboratory<br>Ready!</div>
+            </div>
+        </div>
+
         <div class="brand-top">
             🍎 <span>Jaketron</span>
         </div>
@@ -180,7 +277,7 @@ HTML_TEMPLATE = """
         <h2>Soil Diagnostic Scanner</h2>
         <div class="subtitle">Professional Computer Vision Soil Analysis & Crop Advisor</div>
         
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" id="scan-form" onsubmit="triggerScanner(event)">
             <div class="file-upload-wrapper">
                 <button type="button" class="btn-custom">📷 Capture / Select Soil Image</button>
                 <input type="file" name="soil_image" accept="image/*" capture="environment" id="soil-file-input" onchange="showFileName()">
@@ -188,7 +285,7 @@ HTML_TEMPLATE = """
             <div id="file-status">Image selected successfully!</div>
 
             <div class="select-group">
-                <select name="soil_type">
+                <select name="soil_type" id="soil-select">
                     <option value="">-- Select Soil Classification --</option>
                     <option value="loam">Loam (Balanced USDA Standard)</option>
                     <option value="clay">Clay (Vertisol / Heavy Dense)</option>
@@ -197,11 +294,18 @@ HTML_TEMPLATE = """
                 </select>
             </div>
 
-            <button type="submit" class="btn-custom" style="background: #196f3d;">🔬 Run Diagnostic Scan</button>
+            <button type="submit" class="btn-custom" style="background: #196f3d;" id="submit-btn">🔬 Run Diagnostic Scan</button>
         </form>
 
+        <!-- Loading Animation Container -->
+        <div id="loader-overlay">
+            <div class="scanner-ring"></div>
+            <div class="scanner-text" id="loader-status-text">Calibrating computer vision matrices...</div>
+            <div class="scanner-subtext">Running USDA/FAO benchmark comparison</div>
+        </div>
+
         {% if show_results %}
-        <div class="result-container">
+        <div class="result-container" id="results-panel">
             {% if image_data %}
             <div class="image-preview-box">
                 <div style="font-size: 12px; font-weight: 600; color: #718093; margin-bottom: 6px; text-transform: uppercase;">Captured Soil Sample</div>
@@ -251,6 +355,58 @@ HTML_TEMPLATE = """
         }
     }
 
+    // Check if we are showing results right after a POST submission
+    const hasResults = {% if show_results %}true{% else %}false{% endif %};
+
+    if (hasResults) {
+        // Automatically run the leaf-opening sequence on page load if results are present
+        window.addEventListener('load', () => {
+            const scanForm = document.getElementById('scan-form');
+            if(scanForm) scanForm.style.display = 'none';
+
+            const leafTransition = document.getElementById('leaf-transition');
+            if(leafTransition) {
+                leafTransition.style.display = 'block';
+                
+                // Trigger opening animation after a brief moment
+                setTimeout(() => {
+                    document.getElementById('leaf-l').classList.add('open-left');
+                    document.getElementById('leaf-r').classList.add('open-right');
+                }, 400);
+
+                // Hide the leaf container entirely after animation finishes
+                setTimeout(() => {
+                    leafTransition.style.display = 'none';
+                }, 1600);
+            }
+        });
+    }
+
+    function triggerScanner(event) {
+        event.preventDefault();
+        
+        // Hide form inputs
+        const form = document.getElementById('scan-form');
+        if(form) form.style.display = 'none';
+
+        // Show radar scanner loader
+        const loader = document.getElementById('loader-overlay');
+        if(loader) loader.style.display = 'block';
+
+        const statusText = document.getElementById('loader-status-text');
+        setTimeout(() => {
+            if(statusText) statusText.innerText = "Analyzing pixel hue, texture & aggregate density...";
+        }, 600);
+        setTimeout(() => {
+            if(statusText) statusText.innerText = "Synthesizing macro-nutrient profile...";
+        }, 1200);
+
+        // Submit form after scanning loader finishes
+        setTimeout(() => {
+            event.target.submit();
+        }, 1800);
+    }
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
@@ -297,7 +453,6 @@ def index():
     if request.method == 'POST':
         show_results = True
         
-        # Handle uploaded image processing
         uploaded_file = request.files.get('soil_image')
         if uploaded_file and uploaded_file.filename != '':
             file_bytes = uploaded_file.read()
