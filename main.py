@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, jsonify
+from flask import Flask, render_template_string, request, jsonify, send_from_directory
 import os
 import base64
 
@@ -11,7 +11,6 @@ def get_real_apple():
     except Exception:
         return ""
 
-# Defined globally at the top so both routes can access it safely
 APPLE_B64 = get_real_apple()
 
 HTML_TEMPLATE = """
@@ -44,7 +43,6 @@ HTML_TEMPLATE = """
 </head>
 <body class="bg-[#f0fdf4] text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Splash Screen with Real Apple Logo -->
     <div id="splash-screen">
         <div class="text-center p-8 space-y-4 max-w-sm">
             <div class="relative inline-block">
@@ -59,9 +57,7 @@ HTML_TEMPLATE = """
         </div>
     </div>
 
-    <!-- Main App Interface -->
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
-        <!-- Header Branding with Real Apple Logo -->
         <div class="flex items-center justify-center space-x-2 mb-2">
             {% if apple_data %}
             <img src="data:image/jpeg;base64,{{ apple_data }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200 bg-white p-0.5">
@@ -151,6 +147,10 @@ def index():
             result = "Please capture or select a soil image first before running the diagnostic scan."
     return render_template_string(HTML_TEMPLATE, result=result, apple_data=APPLE_B64)
 
+@app.route("/icon.png")
+def icon():
+    return send_from_directory("C:\\soil_scanner", "icon.png")
+
 @app.route("/manifest.json")
 def manifest():
     return jsonify({
@@ -163,10 +163,16 @@ def manifest():
         "description": "Professional computer vision soil analysis & crop advisor tool.",
         "icons": [
             {
-                "src": "data:image/jpeg;base64," + APPLE_B64,
-                "sizes": "192x192 512x512",
-                "type": "image/jpeg",
-                "purpose": "any maskable"
+                "src": "/icon.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any"
+            },
+            {
+                "src": "/icon.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "any"
             }
         ]
     })
