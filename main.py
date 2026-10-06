@@ -4,16 +4,8 @@ import base64
 
 app = Flask(__name__)
 
-def get_apple_base64():
-    try:
-        # Automatically reads your local apple image file and encodes it to base64
-        apple_path = os.path.join("C:\\soil_scanner", "apple.jpg")
-        if os.path.exists(apple_path):
-            with open(apple_path, "rb") as f:
-                return base64.b64encode(f.read()).decode('utf-8')
-    except Exception:
-        pass
-    return ""
+# Hardcoded permanent base64 string of your watercolor apple logo to guarantee it renders
+APPLE_B64 = "YOUR_COPIED_BASE64_STRING_HERE"
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -157,7 +149,6 @@ HTML_TEMPLATE = """
 def index():
     result = None
     image_data = None
-    apple_b64 = get_apple_base64()
 
     if request.method == "POST":
         file = request.files.get("soil_image")
@@ -168,7 +159,7 @@ def index():
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
             
-    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=apple_b64)
+    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=APPLE_B64)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
