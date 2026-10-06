@@ -9,244 +9,179 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soil Diagnostic & Testing Platform</title>
+    <title>Soil Diagnostic Scanner - Jaketron</title>
     <style>
-        :root {
-            --primary: #1e3799;
-            --secondary: #4a69bd;
-            --accent: #27ae60;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #2f3640;
-            --text-muted: #718093;
-            --border: #dcdde1;
-        }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg-color); 
+            background: #eaf6ef; 
             margin: 0; 
-            padding: 30px; 
-            color: var(--text-main); 
-            line-height: 1.6; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #2f3640; 
         }
         .container { 
-            max-width: 820px; 
-            background: var(--card-bg); 
-            margin: 0 auto; 
-            padding: 40px; 
-            border-radius: 16px; 
-            box-shadow: 0 12px 35px rgba(0,0,0,0.08); 
+            width: 100%;
+            max-width: 480px; 
+            background: #ffffff; 
+            padding: 35px 25px; 
+            border-radius: 24px; 
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08); 
+            position: relative;
+            box-sizing: border-box;
         }
-        .header {
+        .brand-top {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+        .brand-top span {
+            color: #27ae60;
+            margin-left: 5px;
+        }
+        .icon-center {
             text-align: center;
-            margin-bottom: 35px;
-            border-bottom: 2px solid var(--bg-color);
-            padding-bottom: 20px;
+            font-size: 40px;
+            margin-bottom: 5px;
         }
         h2 { 
-            color: var(--primary); 
+            color: #1b4d3e; 
+            text-align: center; 
             margin: 0 0 8px 0; 
-            font-size: 28px; 
-            letter-spacing: -0.5px; 
+            font-size: 24px; 
+            font-weight: 700;
         }
         .subtitle { 
-            color: var(--text-muted); 
-            font-size: 14px; 
-            font-weight: 500;
-        }
-        .form-section { 
-            background: #fafbfc; 
-            border: 1px solid var(--border); 
-            padding: 25px; 
-            border-radius: 12px; 
+            text-align: center; 
+            color: #718093; 
+            font-size: 13px; 
             margin-bottom: 25px; 
+            line-height: 1.4;
         }
-        .form-group { 
-            margin-bottom: 20px; 
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
         }
-        .form-group:last-child { 
-            margin-bottom: 0; 
+        .file-upload-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
         }
-        label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: 600; 
-            color: #353b48; 
-            font-size: 13px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.8px; 
-        }
-        input[type="file"], select { 
-            width: 100%; 
-            padding: 14px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            background: #fff; 
-            font-size: 15px; 
-            color: var(--text-main); 
-            transition: all 0.2s; 
-        }
-        input[type="file"]:focus, select:focus { 
-            border-color: var(--accent); 
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15);
-            outline: none; 
-        }
-        .camera-hint { 
-            font-size: 13px; 
-            color: var(--text-muted); 
-            margin-top: 6px; 
-            display: block; 
-        }
-        button { 
-            background: var(--accent); 
+        .btn-custom {
+            background: #1e8449; 
             color: white; 
             border: none; 
             padding: 16px 20px; 
             width: 100%; 
-            border-radius: 8px; 
+            border-radius: 12px; 
             font-size: 15px; 
             cursor: pointer; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            transition: background 0.2s, transform 0.1s; 
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+            font-weight: 600; 
+            text-align: center;
+            box-sizing: border-box;
+            display: block;
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
+            transition: background 0.2s, transform 0.1s;
         }
-        button:hover { 
-            background: #219653; 
+        .btn-custom:hover { 
+            background: #145a32; 
         }
-        button:active { 
-            transform: scale(0.99); 
+        .btn-custom:active {
+            transform: scale(0.99);
+        }
+        .select-group {
+            margin-bottom: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dcdde1;
+            border-radius: 12px;
+            background: #f9f9f9;
+            font-size: 14px;
+            color: #2f3640;
+            outline: none;
+            box-sizing: border-box;
+        }
+        select:focus {
+            border-color: #1e8449;
+            background: #fff;
         }
         
         .result-container { 
-            margin-top: 35px; 
-            border-top: 2px solid var(--bg-color); 
-            padding-top: 30px; 
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            margin-top: 25px; 
+            border-top: 2px solid #f1f2f6; 
+            padding-top: 20px; 
+            animation: fadeIn 0.4s ease-in-out; 
         }
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(12px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .result-box { 
-            background: #e8f8f5; 
-            border-left: 6px solid var(--accent); 
-            padding: 22px; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-        }
-        .result-box h3 { 
-            margin-top: 0; 
-            color: #117a65; 
-            font-size: 18px; 
-            margin-bottom: 8px;
-        }
-        .result-box p { 
-            margin: 0; 
-            color: #2d3436;
-            font-size: 15px;
-        }
+        .result-box { background: #e8f8f5; border-left: 5px solid #27ae60; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+        .result-box h3 { margin-top: 0; color: #117a65; font-size: 16px; margin-bottom: 6px; }
         
-        .lab-box { 
-            background: #fef9e7; 
-            border-left: 6px solid #f39c12; 
-            padding: 22px; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-        }
-        .lab-box h4 { 
-            margin-top: 0; 
-            color: #b7950b; 
-            font-size: 18px; 
-            margin-bottom: 15px;
-        }
-        .lab-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 12px; 
-            margin: 0; 
-            padding: 0; 
-            list-style: none; 
-        }
-        .lab-grid li { 
-            font-size: 14px; 
-            background: rgba(255,255,255,0.7); 
-            padding: 10px 14px; 
-            border-radius: 6px; 
-            border: 1px solid rgba(243, 156, 18, 0.2);
-        }
+        .lab-box { background: #fef9e7; border-left: 5px solid #f39c12; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; }
+        .lab-box h4 { margin-top: 0; color: #b7950b; font-size: 15px; margin-bottom: 10px; }
+        .lab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; }
+        .lab-grid li { background: rgba(255,255,255,0.7); padding: 8px 10px; border-radius: 6px; }
         
-        .recommendation-box { 
-            background: #ebf5fb; 
-            border-left: 6px solid #2980b9; 
-            padding: 22px; 
-            border-radius: 8px; 
-        }
-        .recommendation-box h4 { 
-            margin-top: 0; 
-            color: #1b4f72; 
-            font-size: 18px; 
-            margin-bottom: 8px;
-        }
-        .recommendation-box p { 
-            margin: 0; 
-            color: #2c3e50;
-            font-size: 15px;
-        }
+        .recommendation-box { background: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; border-radius: 8px; font-size: 13px; }
+        .recommendation-box h4 { margin-top: 0; color: #1b4f72; font-size: 15px; margin-bottom: 6px; }
         
-        .weather-box { 
-            background: #f4f6f8; 
-            border: 1px solid var(--border); 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-top: 30px; 
-            border-left: 6px solid #3498db; 
-        }
-        .weather-box h4 { 
-            margin-top: 0; 
-            color: #2471a3; 
-            font-size: 15px; 
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 12px; margin-top: 25px; border-left: 5px solid #3498db; font-size: 13px; }
+        .weather-box h4 { margin-top: 0; color: #2471a3; font-size: 14px; margin-bottom: 6px; text-transform: uppercase; }
         
-        @media (max-width: 650px) {
-            .lab-grid { grid-template-columns: 1fr; }
-            .container { padding: 20px; }
-            body { padding: 15px; }
+        #file-status {
+            font-size: 12px;
+            color: #27ae60;
+            text-align: center;
+            margin: 8px 0 15px 0;
+            font-weight: 500;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h2>Soil Diagnostic & Testing Platform</h2>
-            <div class="subtitle">Global Standard Agronomic Soil Profiling & Micro-Climate Intelligence</div>
+        <div class="brand-top">
+            🍎 <span>Jaketron</span>
         </div>
         
+        <div class="icon-center">🌱</div>
+        <h2>Soil Diagnostic Scanner</h2>
+        <div class="subtitle">Professional Computer Vision Soil Analysis & Crop Advisor</div>
+        
         <form method="POST" enctype="multipart/form-data">
-            <div class="form-section">
-                <div class="form-group">
-                    <label>📷 Soil Sample Visual Capture (Optional)</label>
-                    <input type="file" name="soil_image" accept="image/*" capture="environment">
-                    <span class="camera-hint">Capture a live photo using your phone camera or select an existing sample image.</span>
-                </div>
-                <div class="form-group" style="margin-top: 22px;">
-                    <label>Select Soil Texture Classification</label>
-                    <select name="soil_type">
-                        <option value="">-- Choose soil type classification --</option>
-                        <option value="loam">Loam (Balanced USDA Standard)</option>
-                        <option value="clay">Clay (Vertisol / Heavy Dense Matrix)</option>
-                        <option value="sandy">Sandy (Entisol / Coarse Draining)</option>
-                        <option value="silt">Silt (Alluvial / High Silt Composition)</option>
-                    </select>
-                </div>
+            <div class="file-upload-wrapper">
+                <button type="button" class="btn-custom">📷 Capture / Select Soil Image</button>
+                <input type="file" name="soil_image" accept="image/*" capture="environment" id="soil-file-input" onchange="showFileName()">
             </div>
-            <button type="submit">Run Global Lab Analysis</button>
+            <div id="file-status">Image selected successfully!</div>
+
+            <div class="select-group">
+                <select name="soil_type" required>
+                    <option value="">-- Select Soil Classification --</option>
+                    <option value="loam">Loam (Balanced USDA Standard)</option>
+                    <option value="clay">Clay (Vertisol / Heavy Dense)</option>
+                    <option value="sandy">Sandy (Entisol / Coarse Draining)</option>
+                    <option value="silt">Silt (Alluvial / High Silt)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-custom" style="background: #196f3d;">🔬 Run Diagnostic Scan</button>
         </form>
 
         {% if analysis %}
@@ -278,12 +213,21 @@ HTML_TEMPLATE = """
         {% endif %}
 
         <div class="weather-box">
-            <h4>Real-Time Local Weather & Climate Context</h4>
-            <p id="weather-status" style="margin-bottom: 0; font-size: 14px; color: var(--text-muted);">Detecting local weather telemetry and soil micro-climate...</p>
+            <h4>Local Weather & Climate Context</h4>
+            <p id="weather-status" style="margin-bottom: 0; color: #57606f;">Detecting local weather telemetry...</p>
         </div>
     </div>
 
     <script>
+    function showFileName() {
+        const input = document.getElementById('soil-file-input');
+        const status = document.getElementById('file-status');
+        if (input.files && input.files.length > 0) {
+            status.style.display = 'block';
+            status.innerText = "📸 File attached: " + input.files[0].name;
+        }
+    }
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
@@ -298,21 +242,19 @@ HTML_TEMPLATE = """
                         const precip = data.current.precipitation;
                         
                         document.getElementById('weather-status').innerHTML = `
-                            <b>Temperature:</b> ${temp} °C &nbsp;|&nbsp; 
-                            <b>Air Humidity:</b> ${humidity}% &nbsp;|&nbsp; 
-                            <b>Precipitation:</b> ${precip} mm<br>
-                            <span style="font-size: 13px; color: var(--text-muted); font-style: italic; margin-top: 4px; display:inline-block;">Live atmospheric tracking active for automated irrigation and evapotranspiration adjustments.</span>
+                            <b>Temperature:</b> ${temp} °C | <b>Humidity:</b> ${humidity}% | <b>Precipitation:</b> ${precip} mm<br>
+                            <span style="font-size: 11px; font-style: italic; color: #7f8c8d;">Micro-climate tracking synchronized for irrigation tuning.</span>
                         `;
                     }
                 })
                 .catch(err => {
-                    document.getElementById('weather-status').innerText = "Unable to fetch telemetry data from regional weather nodes.";
+                    document.getElementById('weather-status').innerText = "Unable to reach regional weather telemetry nodes.";
                 });
         }, error => {
-            document.getElementById('weather-status').innerText = "Location permission restricted. Enable GPS for localized micro-climate tuning.";
+            document.getElementById('weather-status').innerText = "Location telemetry disabled. Enable GPS for local tuning.";
         });
     } else {
-        document.getElementById('weather-status').innerText = "Geolocation protocol not supported by current browser environment.";
+        document.getElementById('weather-status').innerText = "Geolocation not supported.";
     }
     </script>
 </body>
