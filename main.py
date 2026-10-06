@@ -12,7 +12,6 @@ HTML_TEMPLATE = """
     <title>Soil Diagnostic Scanner - Jaketron</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Professional Laboratory Ambient Container */
       .scanner-viewport {
         position: relative;
         overflow: hidden;
@@ -20,8 +19,6 @@ HTML_TEMPLATE = """
         box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         background: #060907;
       }
-
-      /* Cinematic Botanical Aperture Shutter Effect */
       .botanical-shutter {
         position: absolute;
         inset: 0;
@@ -32,14 +29,11 @@ HTML_TEMPLATE = """
         z-index: 50;
         transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease-in-out;
       }
-
       .shutter-hidden {
         transform: scale(1.25);
         opacity: 0;
         pointer-events: none;
       }
-
-      /* Biometric High-Precision Scanning Laser Beam */
       .scan-laser {
         position: absolute;
         top: 0;
@@ -51,15 +45,12 @@ HTML_TEMPLATE = """
         animation: laserScan 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         z-index: 40;
       }
-
       @keyframes laserScan {
         0% { top: 0%; opacity: 0; }
         15% { opacity: 1; }
         85% { opacity: 1; }
         100% { top: 100%; opacity: 0; }
       }
-
-      /* Holographic HUD Grid Overlay */
       .hud-grid {
         position: absolute;
         inset: 0;
@@ -74,7 +65,6 @@ HTML_TEMPLATE = """
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
     <div class="max-w-xl w-full scanner-viewport p-6 border border-emerald-500/30">
-        <!-- Cinematic Shutter & Laser Overlay -->
         <div id="botanicalShutter" class="botanical-shutter shutter-hidden">
             <div class="hud-grid"></div>
             <div class="scan-laser"></div>
