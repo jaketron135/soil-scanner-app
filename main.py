@@ -8,15 +8,17 @@ HTML_TEMPLATE = """
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Soil Diagnostic Scanner - Advanced Lab Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Diagnostic Scanner - Mobile Camera Enabled</title>
     <style>
         body { font-family: Arial, sans-serif; background: #eef2f5; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 750px; background: white; margin: 0 auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h2 { color: #2c3e50; text-align: center; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: bold; }
-        input[type="file"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        button { background: #27ae60; color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        input[type="file"], select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; background: #fafafa; font-size: 16px; }
+        .camera-hint { font-size: 0.85em; color: #666; margin-top: 5px; display: block; }
+        button { background: #27ae60; color: white; border: none; padding: 14px 20px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
         button:hover { background: #219653; }
         .result-box { margin-top: 25px; padding: 20px; background: #e8f8f5; border-left: 5px solid #27ae60; border-radius: 6px; }
         .lab-box { margin-top: 15px; padding: 15px; background: #fef9e7; border-left: 5px solid #f39c12; border-radius: 6px; font-size: 0.95em; }
@@ -30,8 +32,10 @@ HTML_TEMPLATE = """
         <h2>Soil Diagnostic Scanner</h2>
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label>Upload Soil Sample Image:</label>
-                <input type="file" name="soil_image" required>
+                <label>📷 Capture or Upload Soil Sample Image:</label>
+                <!-- capture="environment" opens the rear camera directly on smartphones -->
+                <input type="file" name="soil_image" accept="image/*" capture="environment" required>
+                <span class="camera-hint">Tap to take a live photo with your phone camera or select an existing image from your device.</span>
             </div>
             <div class="form-group">
                 <label>Select Soil Texture / Type:</label>
