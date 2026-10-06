@@ -4,13 +4,15 @@ import base64
 
 app = Flask(__name__)
 
-# Dynamically load your exact local watercolor apple file into a base64 string
-def get_apple_logo():
-    path = r"C:\soil_scanner\apple.jpg"
-    if os.path.exists(path):
-        with open(path, "rb") as f:
+# Force load the exact local apple.jpg into base64
+def get_real_apple():
+    try:
+        with open(r"C:\soil_scanner\apple.jpg", "rb") as f:
             return base64.b64encode(f.read()).decode("utf-8")
-    return ""
+    except Exception:
+        return ""
+
+APPLE_B64 = get_real_apple()
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -41,13 +43,13 @@ HTML_TEMPLATE = """
 </head>
 <body class="bg-[#f0fdf4] text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Splash Screen with Watercolor Apple Logo -->
+    <!-- Splash Screen with Real Apple Logo -->
     <div id="splash-screen">
         <div class="text-center p-8 space-y-4 max-w-sm">
             <div class="relative inline-block">
                 <div class="absolute -inset-4 bg-emerald-400/30 rounded-full blur-2xl animate-pulse"></div>
-                {% if apple_b64 %}
-                <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
+                {% if apple_data %}
+                <img src="data:image/jpeg;base64,{{ apple_data }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
                 {% endif %}
             </div>
             <h1 class="text-4xl font-black text-emerald-900 tracking-tight">Jaketron</h1>
@@ -58,10 +60,10 @@ HTML_TEMPLATE = """
 
     <!-- Main App Interface -->
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
-        <!-- Header Branding with Logo -->
+        <!-- Header Branding with Real Apple Logo -->
         <div class="flex items-center justify-center space-x-2 mb-2">
-            {% if apple_b64 %}
-            <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200 bg-white p-0.5">
+            {% if apple_data %}
+            <img src="data:image/jpeg;base64,{{ apple_data }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200 bg-white p-0.5">
             {% endif %}
             <span class="text-xl font-bold tracking-tight text-emerald-800">
                 Jaketron
@@ -146,7 +148,7 @@ def index():
             result = "Apply balanced organic compost (NPK 14-14-14) at 50kg per 500m² alongside decomposed banana stalk mulch."
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
-    return render_template_string(HTML_TEMPLATE, result=result, apple_b64=get_apple_logo())
+    return render_template_string(HTML_TEMPLATE, result=result, apple_data=APPLE_B64)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
