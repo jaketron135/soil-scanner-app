@@ -122,6 +122,7 @@ HTML_TEMPLATE = """
             background: #fff;
         }
         
+        /* Popup / Hidden State until Scanned */
         .result-container { 
             margin-top: 25px; 
             border-top: 2px solid #f1f2f6; 
@@ -138,10 +139,10 @@ HTML_TEMPLATE = """
         .lab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; }
         .lab-grid li { background: rgba(255,255,255,0.7); padding: 8px 10px; border-radius: 6px; }
         
-        .recommendation-box { background: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; border-radius: 8px; font-size: 13px; }
+        .recommendation-box { background: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; }
         .recommendation-box h4 { margin-top: 0; color: #1b4f72; font-size: 15px; margin-bottom: 6px; }
         
-        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 12px; margin-top: 25px; border-left: 5px solid #3498db; font-size: 13px; }
+        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #3498db; font-size: 13px; }
         .weather-box h4 { margin-top: 0; color: #2471a3; font-size: 14px; margin-bottom: 6px; text-transform: uppercase; }
         
         #file-status {
@@ -172,7 +173,7 @@ HTML_TEMPLATE = """
             <div id="file-status">Image selected successfully!</div>
 
             <div class="select-group">
-                <select name="soil_type" required>
+                <select name="soil_type">
                     <option value="">-- Select Soil Classification --</option>
                     <option value="loam">Loam (Balanced USDA Standard)</option>
                     <option value="clay">Clay (Vertisol / Heavy Dense)</option>
@@ -184,7 +185,7 @@ HTML_TEMPLATE = """
             <button type="submit" class="btn-custom" style="background: #196f3d;">🔬 Run Diagnostic Scan</button>
         </form>
 
-        {% if analysis %}
+        {% if show_results %}
         <div class="result-container">
             <div class="result-box">
                 <h3>Diagnostic Overview</h3>
@@ -263,9 +264,12 @@ HTML_TEMPLATE = """
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    analysis = None
-    lab = None
+    show_results = False
+    analysis = ""
+    lab = {}
+    
     if request.method == 'POST':
+        show_results = True
         soil_type = request.form.get('soil_type', 'loam')
         if soil_type == 'clay':
             analysis = "Heavy Vertisol Clay Detected: Exceptional nutrient holding capacity with dense structural aggregation. Prone to moisture locking and surface crusting."
@@ -308,7 +312,7 @@ def index():
                 "remedy": "Maintain standard crop rotation cycles and light organic topdressing. This matrix represents an ideal baseline configuration for high-yield cultivation."
             }
             
-    return render_template_string(HTML_TEMPLATE, analysis=analysis, lab=lab)
+    return render_template_string(HTML_TEMPLATE, show_results=show_results, analysis=analysis, lab=lab)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
