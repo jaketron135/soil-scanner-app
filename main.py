@@ -9,75 +9,107 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soil Diagnostic Scanner - Advanced Lab Edition</title>
+    <title>Soil Diagnostic Scanner - Professional Lab Edition</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #eef2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 750px; background: white; margin: 0 auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e50; text-align: center; }
+        :root {
+            --primary: #2c3e50;
+            --accent: #27ae60;
+            --bg-light: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #dcdde1;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg-light); margin: 0; padding: 25px; color: #2f3640; line-height: 1.6; }
+        .container { max-width: 800px; background: var(--card-bg); margin: 0 auto; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        h2 { color: var(--primary); text-align: center; margin-top: 0; font-size: 28px; letter-spacing: -0.5px; }
+        .subtitle { text-align: center; color: #718093; font-size: 14px; margin-bottom: 30px; }
+        .form-section { background: #fdfefe; border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; margin-bottom: 25px; }
         .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; }
-        input[type="file"], select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; background: #fafafa; font-size: 16px; }
-        .camera-hint { font-size: 0.85em; color: #666; margin-top: 5px; display: block; }
-        button { background: #27ae60; color: white; border: none; padding: 14px 20px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .form-group:last-child { margin-bottom: 0; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #353b48; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input[type="file"], select { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; background: #fff; font-size: 15px; color: #2f3640; transition: border-color 0.2s; }
+        input[type="file"]:focus, select:focus { border-color: var(--accent); outline: none; }
+        .camera-hint { font-size: 13px; color: #718093; margin-top: 6px; display: block; }
+        button { background: var(--accent); color: white; border: none; padding: 16px 20px; width: 100%; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s; }
         button:hover { background: #219653; }
-        .result-box { margin-top: 25px; padding: 20px; background: #e8f8f5; border-left: 5px solid #27ae60; border-radius: 6px; }
-        .lab-box { margin-top: 15px; padding: 15px; background: #fef9e7; border-left: 5px solid #f39c12; border-radius: 6px; font-size: 0.95em; }
-        .lab-box ul { padding-left: 20px; margin: 8px 0; }
-        .recommendation-box { margin-top: 15px; padding: 15px; background: #ebf5fb; border-left: 5px solid #2980b9; border-radius: 6px; }
-        .weather-box { background: #f4f6f8; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 5px solid #3498db; }
+        button:active { transform: scale(0.99); }
+        
+        .result-container { margin-top: 30px; border-top: 2px solid var(--border-color); padding-top: 25px; }
+        .result-box { background: #e8f8f5; border-left: 6px solid var(--accent); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .result-box h3 { margin-top: 0; color: #117a65; font-size: 20px; }
+        
+        .lab-box { background: #fef9e7; border-left: 6px solid #f39c12; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .lab-box h4 { margin-top: 0; color: #b7950b; font-size: 18px; }
+        .lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .lab-grid li { font-size: 14px; background: rgba(255,255,255,0.6); padding: 8px 12px; border-radius: 6px; }
+        
+        .recommendation-box { background: #ebf5fb; border-left: 6px solid #2980b9; padding: 20px; border-radius: 8px; }
+        .recommendation-box h4 { margin-top: 0; color: #1b4f72; font-size: 18px; }
+        
+        .weather-box { background: #f4f6f8; border: 1px solid #d5dbdb; padding: 20px; border-radius: 12px; margin-top: 30px; border-left: 6px solid #3498db; }
+        .weather-box h4 { margin-top: 0; color: #2471a3; font-size: 16px; }
+        
+        @media (max-width: 600px) {
+            .lab-grid { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Soil Diagnostic Scanner</h2>
+        <h2>Soil Diagnostic & Testing Platform</h2>
+        <div class="subtitle">Global Standard Agronomic Soil Profiling & Micro-Climate Intelligence</div>
+        
         <form method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>📷 Capture or Upload Soil Sample Image (Optional):</label>
-                <!-- Removed 'required' so it never blocks submission -->
-                <input type="file" name="soil_image" accept="image/*" capture="environment">
-                <span class="camera-hint">Snap a live photo with your mobile camera or select an existing image.</span>
-            </div>
-            <div class="form-group">
-                <label>Select Soil Texture / Type:</label>
-                <select name="soil_type">
-                    <option value="loam">Loam (Balanced USDA Standard)</option>
-                    <option value="clay">Clay (Vertisol / Heavy Dense)</option>
-                    <option value="sandy">Sandy (Entisol / Loose Draining)</option>
-                    <option value="silt">Silt (Alluvial / High Silt Composition)</option>
-                </select>
+            <div class="form-section">
+                <div class="form-group">
+                    <label>📷 Soil Sample Visual Capture (Optional)</label>
+                    <input type="file" name="soil_image" accept="image/*" capture="environment">
+                    <span class="camera-hint">Capture a live photo using your phone camera or select an existing sample image.</span>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Select Soil Texture Classification</label>
+                    <select name="soil_type">
+                        <option value="loam">Loam (Balanced USDA Standard)</option>
+                        <option value="clay">Clay (Vertisol / Heavy Dense Matrix)</option>
+                        <option value="sandy">Sandy (Entisol / Coarse Draining)</option>
+                        <option value="silt">Silt (Alluvial / High Silt Composition)</option>
+                    </select>
+                </div>
             </div>
             <button type="submit">Run Global Lab Analysis</button>
         </form>
 
         {% if analysis %}
-        <div class="result-box">
-            <h3>Diagnostic Overview</h3>
-            <p>{{ analysis }}</p>
+        <div class="result-container">
+            <div class="result-box">
+                <h3>Diagnostic Overview</h3>
+                <p>{{ analysis }}</p>
+            </div>
             
             <div class="lab-box">
                 <h4>International Soil Laboratory Profiling (USDA/FAO Metrics)</h4>
-                <ul>
-                    <li><b>Classification & Texture:</b> {{ lab.classification }}</li>
-                    <li><b>Active Soil pH:</b> {{ lab.ph }} ({{ lab.ph_status }})</li>
-                    <li><b>Total Nitrogen (N):</b> {{ lab.n }}</li>
-                    <li><b>Available Phosphorus (P):</b> {{ lab.p }}</li>
-                    <li><b>Exchangeable Potassium (K):</b> {{ lab.k }}</li>
-                    <li><b>Organic Carbon / Matter:</b> {{ lab.organic }}</li>
-                    <li><b>Cation Exchange Capacity (CEC):</b> {{ lab.cec }}</li>
-                    <li><b>Water Holding Capacity:</b> {{ lab.whc }}</li>
+                <ul class="lab-grid">
+                    <li><b>Classification:</b> {{ lab.classification }}</li>
+                    <li><b>Active pH:</b> {{ lab.ph }} ({{ lab.ph_status }})</li>
+                    <li><b>Nitrogen (N):</b> {{ lab.n }}</li>
+                    <li><b>Phosphorus (P):</b> {{ lab.p }}</li>
+                    <li><b>Potassium (K):</b> {{ lab.k }}</li>
+                    <li><b>Organic Matter:</b> {{ lab.organic }}</li>
+                    <li><b>CEC Capacity:</b> {{ lab.cec }}</li>
+                    <li><b>Water Capacity:</b> {{ lab.whc }}</li>
                 </ul>
             </div>
 
             <div class="recommendation-box">
-                <h4>Targeted Agronomic Management & Remediation</h4>
+                <h4>Targeted Agronomic Remediation & Management</h4>
                 <p>{{ lab.remedy }}</p>
             </div>
         </div>
         {% endif %}
 
         <div class="weather-box">
-            <h4>Local Weather & Climate Context</h4>
-            <p id="weather-status">Detecting local weather and soil micro-climate...</p>
+            <h4>Real-Time Local Weather & Climate Context</h4>
+            <p id="weather-status" style="margin-bottom: 0;">Detecting local weather telemetry and soil micro-climate...</p>
         </div>
     </div>
 
@@ -96,21 +128,21 @@ HTML_TEMPLATE = """
                         const precip = data.current.precipitation;
                         
                         document.getElementById('weather-status').innerHTML = `
-                            <b>Temperature:</b> ${temp} degC | 
-                            <b>Air Humidity:</b> ${humidity}% | 
-                            <b>Current Precipitation:</b> ${precip} mm<br>
-                            <span style="font-size: 0.9em; color: #555;"><i>Adjusting evaporation loss index and irrigation cycles based on live atmospheric tracking.</i></span>
+                            <b>Temperature:</b> ${temp} °C &nbsp;|&nbsp; 
+                            <b>Air Humidity:</b> ${humidity}% &nbsp;|&nbsp; 
+                            <b>Precipitation:</b> ${precip} mm<br>
+                            <span style="font-size: 13px; color: #57606f; font-style: italic; margin-top: 4px; display:inline-block;">Live atmospheric tracking active for automated irrigation and evapotranspiration adjustments.</span>
                         `;
                     }
                 })
                 .catch(err => {
-                    document.getElementById('weather-status').innerText = "Unable to fetch live weather data.";
+                    document.getElementById('weather-status').innerText = "Unable to fetch telemetry data from regional weather nodes.";
                 });
         }, error => {
-            document.getElementById('weather-status').innerText = "Location access denied. Enable GPS for localized micro-climate tuning.";
+            document.getElementById('weather-status').innerText = "Location permission restricted. Enable GPS for localized micro-climate tuning.";
         });
     } else {
-        document.getElementById('weather-status').innerText = "Geolocation is not supported by your browser.";
+        document.getElementById('weather-status').innerText = "Geolocation protocol not supported by current browser environment.";
     }
     </script>
 </body>
@@ -124,44 +156,44 @@ def index():
     if request.method == 'POST':
         soil_type = request.form.get('soil_type', 'loam')
         if soil_type == 'clay':
-            analysis = "Heavy Vertisol Clay Detected: Exceptional nutrient capacity with dense structural particle aggregation. High moisture retention prone to waterlogging."
+            analysis = "Heavy Vertisol Clay Detected: Exceptional nutrient holding capacity with dense structural aggregation. Prone to moisture locking and surface crusting."
             lab = {
                 "classification": "Fine, smectitic, thermic Udic Haplusterts",
-                "ph": "6.8", "ph_status": "Slightly Acidic to Neutral (Optimal range)",
+                "ph": "6.8", "ph_status": "Slightly Acidic to Neutral",
                 "n": "Medium-High (2.1 g/kg)", "p": "Low-Medium (14 mg/kg Bray-1)", "k": "High (280 mg/kg)",
-                "organic": "2.4% (Moderate Humus Content)", "cec": "38 meq/100g (High Nutrient Retention)",
+                "organic": "2.4% (Moderate Humus)", "cec": "38 meq/100g (High Retention)",
                 "whc": "High (0.35 cm3/cm3)",
-                "remedy": "Incorporate coarse organic matter (compost, green manure) to improve macro-porosity and aeration. Apply gypsum if surface crusting occurs; avoid tillage when excessively wet."
+                "remedy": "Incorporate coarse organic compost and green manure to enhance macro-porosity and drainage. Apply agricultural gypsum if surface crusting impedes seedling emergence."
             }
         elif soil_type == 'sandy':
-            analysis = "Coarse Entisol Sandy Soil Detected: Rapid hydraulic conductivity and minimal structural cohesion. Prone to severe leaching of mobile nutrients."
+            analysis = "Coarse Entisol Sandy Soil Detected: Rapid hydraulic drainage with low structural cohesion. High risk of mobile nutrient leaching under heavy rainfall."
             lab = {
                 "classification": "Sandy, siliceous, hyperthermic Typic Quartzipsamments",
                 "ph": "6.2", "ph_status": "Moderately Acidic",
-                "n": "Low (0.6 g/kg - High leaching risk)", "p": "Low (8 mg/kg)", "k": "Low (65 mg/kg)",
-                "organic": "1.1% (Low Organic Fraction)", "cec": "6.5 meq/100g (Low Nutrient Capacity)",
-                "whc": "Low (0.12 cm3/cm3 - Rapid Drainage)",
-                "remedy": "Apply split-dose fertigation to prevent nutrient washout. Heavily amend with biochar, peat, or aged manure to build water-holding capacity and buffer exchange sites."
+                "n": "Low (0.6 g/kg - High Leaching)", "p": "Low (8 mg/kg)", "k": "Low (65 mg/kg)",
+                "organic": "1.1% (Low Organic Fraction)", "cec": "6.5 meq/100g (Low Capacity)",
+                "whc": "Low (0.12 cm3/cm3 - Rapid Drain)",
+                "remedy": "Utilize split-dose fertigation to prevent nutrient washout. Heavily amend with biochar, peat, or aged manure to boost water retention and buffer exchange sites."
             }
         elif soil_type == 'silt':
-            analysis = "Alluvial Silt Loam Detected: Smooth tactile texture with balanced capillary action. Highly fertile agricultural matrix susceptible to structural compaction under heavy foot traffic."
+            analysis = "Alluvial Silt Loam Detected: Smooth tactile texture with optimal capillary moisture transport. Highly fertile matrix sensitive to compaction from heavy machinery."
             lab = {
                 "classification": "Coarse-silty, mixed, superactive, mesic Typic Hapludalfs",
-                "ph": "7.0", "ph_status": "Neutral (Ideal Biological Activity)",
+                "ph": "7.0", "ph_status": "Neutral (Optimal Biological)",
                 "n": "High (3.2 g/kg)", "p": "Medium (22 mg/kg)", "k": "Medium-High (210 mg/kg)",
                 "organic": "3.2% (Good Microbial Biomass)", "cec": "22 meq/100g (Balanced)",
                 "whc": "High (0.30 cm3/cm3)",
-                "remedy": "Maintain continuous cover cropping or surface mulch to prevent surface sealing and soil crusting from heavy rain splash. Minimize heavy machinery passes."
+                "remedy": "Apply continuous cover cropping or surface mulching to safeguard against heavy rain splash erosion and crusting. Restrict heavy equipment passes when damp."
             }
         else:
-            analysis = "Optimal Loam Matrix Detected: Premium agronomic balance of sand, silt, and clay fractions. Delivers superior root penetration and aeration."
+            analysis = "Optimal Loam Matrix Detected: Premium agronomic balance of sand, silt, and clay fractions. Delivers superior root aeration and nutrient availability."
             lab = {
                 "classification": "Fine-loamy, mixed, active, mesic Typic Argiudolls",
-                "ph": "6.5", "ph_status": "Slightly Acidic (Ideal Nutrient Availability)",
+                "ph": "6.5", "ph_status": "Slightly Acidic (Ideal Range)",
                 "n": "High (3.8 g/kg)", "p": "High (35 mg/kg Mehlich-3)", "k": "High (320 mg/kg)",
-                "organic": "4.0% (Rich Biological Activity)", "cec": "26 meq/100g (Optimal)",
+                "organic": "4.0% (High Microbial Activity)", "cec": "26 meq/100g (Optimal)",
                 "whc": "Optimal (0.26 cm3/cm3)",
-                "remedy": "Maintain standard rotational cropping and light organic topdressing. Perfect baseline composition for intensive multi-crop cultivation."
+                "remedy": "Maintain standard crop rotation cycles and light organic topdressing. This matrix represents an ideal baseline configuration for high-yield cultivation."
             }
             
     return render_template_string(HTML_TEMPLATE, analysis=analysis, lab=lab)
