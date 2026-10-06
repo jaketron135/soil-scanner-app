@@ -3,6 +3,9 @@ import os
 
 app = Flask(__name__)
 
+# Fallback clean embedded SVG / Base64 wrapper so it never breaks
+APPLE_LOGO_URI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDU5NjY5IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIwLjlDMTEuNSAyMC45IDExIDIwLjYgMTAuNiAyMC4zQy05LjMgMTkuMy04LjYgMTcuNS04LjYgMTUuNEMtOC42IDEyLjggMTAuNCAxMC42IDEyIDguNEMxMy42IDEwLjYgMTUuNCAxMi44IDE1LjQgMTUuNEMxNS40IDE3LjUgMTQuNyAxOS4zIDEzLjQgMjAuM0MxMyAyMC42IDEyLjUgMjAuOSAxMiAyMC45WiIvPjxwYXRoIGQ9Ik0xMiA1LjRDMTIgNC4zIDEyLjggMy40IDEzLjkgMi44QzE0LjUgMi41IDE1LjIgMi4zIDE1LjkgMi4zQzE2IDIuMyAxNi4xIDIuNCAxNi4xIDIuN0MxNi4zIDQuNCAxNC43IDYuMiAxMiA1LjRaIi8+PC9zdmc+"
+
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -32,12 +35,12 @@ HTML_TEMPLATE = """
 </head>
 <body class="bg-[#f0fdf4] text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Splash Screen with Watercolor Apple Logo -->
+    <!-- Splash Screen with Forced Logo -->
     <div id="splash-screen">
         <div class="text-center p-8 space-y-4 max-w-sm">
             <div class="relative inline-block">
                 <div class="absolute -inset-4 bg-emerald-400/30 rounded-full blur-2xl animate-pulse"></div>
-                <img src="{{ url_for('static', filename='apple.jpg') }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
+                <img src="{{ apple_logo }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
             </div>
             <h1 class="text-4xl font-black text-emerald-900 tracking-tight">Jaketron</h1>
             <p class="text-emerald-700 font-bold text-base tracking-wide uppercase">Soil Diagnostic Scanner</p>
@@ -47,9 +50,9 @@ HTML_TEMPLATE = """
 
     <!-- Main App Interface -->
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
-        <!-- Header Branding with Logo -->
+        <!-- Header Branding with Forced Logo -->
         <div class="flex items-center justify-center space-x-2 mb-2">
-            <img src="{{ url_for('static', filename='apple.jpg') }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200 bg-white">
+            <img src="{{ apple_logo }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200 bg-white p-0.5">
             <span class="text-xl font-bold tracking-tight text-emerald-800">
                 Jaketron
             </span>
@@ -133,7 +136,7 @@ def index():
             result = "Apply balanced organic compost (NPK 14-14-14) at 50kg per 500m² alongside decomposed banana stalk mulch."
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
-    return render_template_string(HTML_TEMPLATE, result=result)
+    return render_template_string(HTML_TEMPLATE, result=result, apple_logo=APPLE_LOGO_URI)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
