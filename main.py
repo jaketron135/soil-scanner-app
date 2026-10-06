@@ -33,6 +33,7 @@ HTML_TEMPLATE = """
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08); 
             position: relative;
             box-sizing: border-box;
+            overflow: hidden;
         }
         .brand-top {
             display: flex;
@@ -155,7 +156,7 @@ HTML_TEMPLATE = """
             color: #718093;
         }
 
-        /* Leaf Opening Animation Curtain Container */
+        /* Multiple Fresh Leaves Opening Curtain */
         #leaf-transition {
             display: none;
             position: absolute;
@@ -163,52 +164,65 @@ HTML_TEMPLATE = """
             left: 0;
             width: 100%;
             height: 100%;
-            background: #1e8449;
-            border-radius: 24px;
-            overflow: hidden;
             z-index: 100;
-            box-sizing: border-box;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 24px;
         }
-        .leaf-half {
+        .fresh-leaf {
             position: absolute;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(135deg, #27ae60 0%, #145a32 100%);
+            width: 55%;
+            height: 55%;
+            background: radial-gradient(circle at 30% 30%, #52be80 0%, #229954 50%, #117a65 100%);
+            box-shadow: inset 0 0 25px rgba(255,255,255,0.4), 0 8px 20px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            transition: transform 1.4s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s ease;
         }
-        .leaf-left {
-            left: 0;
-            border-top-left-radius: 24px;
-            border-bottom-left-radius: 24px;
-            border-right: 2px solid rgba(255,255,255,0.2);
-            transform-origin: left;
+        /* Realistic organic leaf contour shapes using border-radius */
+        .leaf-top-left {
+            top: -10%;
+            left: -10%;
+            border-radius: 0 80% 20% 80%;
+            transform-origin: top left;
         }
-        .leaf-right {
-            right: 0;
-            border-top-right-radius: 24px;
-            border-bottom-right-radius: 24px;
-            border-left: 2px solid rgba(255,255,255,0.2);
-            transform-origin: right;
+        .leaf-top-right {
+            top: -10%;
+            right: -10%;
+            border-radius: 80% 0 80% 20%;
+            transform-origin: top right;
         }
-        .leaf-content {
-            color: white;
+        .leaf-bottom-left {
+            bottom: -10%;
+            left: -10%;
+            border-radius: 80% 20% 80% 0%;
+            transform-origin: bottom left;
+        }
+        .leaf-bottom-right {
+            bottom: -10%;
+            right: -10%;
+            border-radius: 20% 80% 0% 80%;
+            transform-origin: bottom right;
+        }
+        
+        .leaf-badge {
+            color: #fff;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 16px;
             text-align: center;
-            padding: 20px;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.15);
+            padding: 8px 14px;
+            border-radius: 20px;
+            backdrop-filter: blur(2px);
         }
-        .open-left {
-            transform: translateX(-100%);
-        }
-        .open-right {
-            transform: translateX(100%);
-        }
+
+        /* Leaf opening directions */
+        .open-tl { transform: translate(-100%, -100%) rotate(-20deg); opacity: 0; }
+        .open-tr { transform: translate(100%, -100%) rotate(20deg); opacity: 0; }
+        .open-bl { transform: translate(-100%, 100%) rotate(20deg); opacity: 0; }
+        .open-br { transform: translate(100%, 100%) rotate(-20deg); opacity: 0; }
 
         .result-container { 
             margin-top: 25px; 
@@ -259,13 +273,19 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container" id="main-container">
-        <!-- Leaf Opening Curtain Overlay -->
+        <!-- Multiple Real Fresh Leaves Animation Overlay -->
         <div id="leaf-transition">
-            <div class="leaf-half leaf-left" id="leaf-l">
-                <div class="leaf-content" style="text-align: right;">🌿 Unfurling<br>Soil Metrics...</div>
+            <div class="fresh-leaf leaf-top-left" id="leaf-tl">
+                <div class="leaf-badge" style="margin-top: 40px; margin-left: 40px;">🌿 Analyzing Soil...</div>
             </div>
-            <div class="leaf-half leaf-right" id="leaf-r">
-                <div class="leaf-content" style="text-align: left;">🌱 Laboratory<br>Ready!</div>
+            <div class="fresh-leaf leaf-top-right" id="leaf-tr">
+                <div class="leaf-badge" style="margin-top: 40px; margin-right: 40px;">🌱 Macro-Nutrients</div>
+            </div>
+            <div class="fresh-leaf leaf-bottom-left" id="leaf-bl">
+                <div class="leaf-badge" style="margin-bottom: 40px; margin-left: 40px;">🍃 USDA Profiling</div>
+            </div>
+            <div class="fresh-leaf leaf-bottom-right" id="leaf-br">
+                <div class="leaf-badge" style="margin-bottom: 40px; margin-right: 40px;">✨ Ready!</div>
             </div>
         </div>
 
@@ -355,11 +375,9 @@ HTML_TEMPLATE = """
         }
     }
 
-    // Check if we are showing results right after a POST submission
     const hasResults = {% if show_results %}true{% else %}false{% endif %};
 
     if (hasResults) {
-        // Automatically run the leaf-opening sequence on page load if results are present
         window.addEventListener('load', () => {
             const scanForm = document.getElementById('scan-form');
             if(scanForm) scanForm.style.display = 'none';
@@ -368,13 +386,14 @@ HTML_TEMPLATE = """
             if(leafTransition) {
                 leafTransition.style.display = 'block';
                 
-                // Trigger opening animation after a brief moment
+                // Unfurl/slide multiple fresh leaves outward simultaneously
                 setTimeout(() => {
-                    document.getElementById('leaf-l').classList.add('open-left');
-                    document.getElementById('leaf-r').classList.add('open-right');
+                    document.getElementById('leaf-tl').classList.add('open-tl');
+                    document.getElementById('leaf-tr').classList.add('open-tr');
+                    document.getElementById('leaf-bl').classList.add('open-bl');
+                    document.getElementById('leaf-br').classList.add('open-br');
                 }, 400);
 
-                // Hide the leaf container entirely after animation finishes
                 setTimeout(() => {
                     leafTransition.style.display = 'none';
                 }, 1600);
@@ -385,11 +404,9 @@ HTML_TEMPLATE = """
     function triggerScanner(event) {
         event.preventDefault();
         
-        // Hide form inputs
         const form = document.getElementById('scan-form');
         if(form) form.style.display = 'none';
 
-        // Show radar scanner loader
         const loader = document.getElementById('loader-overlay');
         if(loader) loader.style.display = 'block';
 
@@ -401,7 +418,6 @@ HTML_TEMPLATE = """
             if(statusText) statusText.innerText = "Synthesizing macro-nutrient profile...";
         }, 1200);
 
-        // Submit form after scanning loader finishes
         setTimeout(() => {
             event.target.submit();
         }, 1800);
