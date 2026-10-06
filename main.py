@@ -4,20 +4,8 @@ import base64
 
 app = Flask(__name__)
 
-# Direct base64 string for your custom watercolor apple logo
-APPLE_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-
-# Attempt to load the actual apple.jpg from disk dynamically if available
-def get_apple_uri():
-    try:
-        apple_path = os.path.join("C:\\soil_scanner", "apple.jpg")
-        if os.path.exists(apple_path):
-            with open(apple_path, "rb") as f:
-                encoded = base64.b64encode(f.read()).decode('utf-8')
-                return f"data:image/jpeg;base64,{encoded}"
-    except Exception:
-        pass
-    return f"data:image/jpeg;base64,{APPLE_BASE64}"
+# PASTE YOUR LONG BASE64 STRING FROM STEP 1 INSIDE THE QUOTES BELOW:
+APPLE_LOGO_B64 = "PASTE_YOUR_APPLE_BASE64_HERE"
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -48,12 +36,12 @@ HTML_TEMPLATE = """
 </head>
 <body class="bg-[#f0fdf4] text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Splash Screen / Front Cover with Custom Apple Logo -->
+    <!-- Splash Screen / Front Cover with Custom Watercolor Apple Logo -->
     <div id="splash-screen">
         <div class="text-center p-8 space-y-4 max-w-sm">
             <div class="relative inline-block">
                 <div class="absolute -inset-4 bg-emerald-400/30 rounded-full blur-2xl animate-pulse"></div>
-                <img src="{{ apple_uri }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
+                <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Jaketron Apple Logo" class="relative w-44 h-44 object-contain mx-auto drop-shadow-xl rounded-2xl border-2 border-emerald-500/40 p-1 bg-white">
             </div>
             <h1 class="text-4xl font-black text-emerald-900 tracking-tight">Jaketron</h1>
             <p class="text-emerald-700 font-bold text-base tracking-wide uppercase">Soil Diagnostic Scanner</p>
@@ -63,9 +51,9 @@ HTML_TEMPLATE = """
 
     <!-- Main App Interface -->
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100">
-        <!-- Header Branding -->
+        <!-- Header Branding with Custom Watercolor Apple Logo -->
         <div class="flex items-center justify-center space-x-2 mb-2">
-            <img src="{{ apple_uri }}" alt="Apple" class="w-8 h-8 object-contain rounded-lg border border-emerald-200">
+            <img src="data:image/jpeg;base64,{{ apple_b64 }}" alt="Apple Logo" class="w-8 h-8 object-contain rounded-lg border border-emerald-200">
             <span class="text-xl font-bold tracking-tight text-emerald-800">
                 Jaketron
             </span>
@@ -161,8 +149,6 @@ HTML_TEMPLATE = """
 def index():
     result = None
     image_data = None
-    apple_uri = get_apple_uri()
-
     if request.method == "POST":
         file = request.files.get("soil_image")
         if file and file.filename != "":
@@ -172,7 +158,7 @@ def index():
         else:
             result = "Please capture or select a soil image first before running the diagnostic scan."
             
-    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_uri=apple_uri)
+    return render_template_string(HTML_TEMPLATE, result=result, image_data=image_data, apple_b64=APPLE_LOGO_B64)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
